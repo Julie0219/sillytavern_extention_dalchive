@@ -1,0 +1,349 @@
+/* ============================================================
+   Dalchive — 기록보관소(아카이브) 테마
+   ST 테마 변수를 베이스로 유지하되, 그 위에 세피아/금박/색인 질감을 얹음
+   ============================================================ */
+
+:root {
+    --dal-gold: #b08d4f;           /* 빛바랜 금박 (오래된 책 가장자리) */
+    --dal-gold-soft: rgba(176, 141, 79, 0.35);
+    --dal-ink: var(--SmartThemeQuoteColor, #b08d4f);
+    --dal-line: var(--SmartThemeBorderColor, #6b5b45);
+    --dal-serif: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, 'Times New Roman', serif;
+}
+
+/* 팝업 창: 둥근 모서리 + 금박 테두리 + 종이 질감 느낌 */
+.popup:has(#cp-root) {
+    border-radius: 14px !important;
+    overflow: hidden;
+    border: 1px solid var(--dal-gold-soft) !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4) !important;
+}
+
+#cp-root {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+    max-height: 72vh;
+    padding: 10px 12px 12px;
+    border-radius: 12px;
+    position: relative;
+    /* 미세한 세피아 종이결 (테마 위에 아주 옅게) */
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 27px, var(--dal-gold-soft) 27px, var(--dal-gold-soft) 28px);
+    background-blend-mode: overlay;
+}
+
+/* 종이결이 너무 진하지 않도록 살짝 가림막 */
+#cp-root::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--SmartThemeBlurTintColor, transparent);
+    opacity: 0.55;
+    pointer-events: none;
+    border-radius: 12px;
+    z-index: 0;
+}
+#cp-root > * { position: relative; z-index: 1; }
+
+/* ---- 타이틀: 고서 표제 느낌 ---- */
+.cp-title {
+    font-family: var(--dal-serif);
+    font-weight: 700;
+    font-size: 1.45em;
+    letter-spacing: 0.04em;
+    padding-bottom: 8px;
+    margin-bottom: 2px;
+    border-bottom: 2px solid var(--dal-gold);
+    color: var(--SmartThemeEmColor, inherit);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+/* 표제 아래 가는 금색 보조선 (이중 괘선) */
+.cp-title::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    bottom: -4px;
+    height: 1px;
+    background: var(--dal-gold-soft);
+}
+
+/* ---- 검색 ---- */
+.cp-search-row { display: flex; gap: 6px; }
+
+#cp-search {
+    flex: 1;
+    padding: 7px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--dal-line);
+    border-left: 3px solid var(--dal-gold);   /* 색인 탭 느낌 좌측선 */
+    background: var(--SmartThemeBlurTintColor, #1e1e1e);
+    color: inherit;
+    font-family: inherit;
+}
+
+/* ---- 카테고리 칩: 색인 라벨 ---- */
+.cp-cats { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.cp-cat {
+    font-size: 0.82em !important;
+    padding: 4px 10px !important;
+    border-radius: 3px !important;
+    border: 1px solid var(--dal-gold-soft) !important;
+    background: transparent !important;
+    letter-spacing: 0.02em;
+    transition: all 0.15s ease;
+}
+.cp-cat:hover { border-color: var(--dal-gold) !important; }
+
+.cp-cat.active {
+    background: var(--dal-gold) !important;
+    color: #1a1410 !important;
+    border-color: var(--dal-gold) !important;
+    font-weight: 600;
+}
+
+.cp-full-label {
+    font-size: 0.82em;
+    opacity: 0.85;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-style: italic;
+}
+
+#cp-status {
+    font-size: 0.8em;
+    opacity: 0.65;
+    min-height: 1em;
+    font-style: italic;
+    letter-spacing: 0.02em;
+}
+
+/* ---- 목록: 장부(ledger)의 색인 행 ---- */
+#cp-list {
+    max-height: 240px;
+    overflow-y: auto;
+    border: 1px solid var(--dal-line);
+    border-radius: 4px;
+    background: var(--black30a, rgba(0,0,0,0.12));
+}
+
+.cp-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    /* 점선 색인 구분선 (장부 느낌) */
+    border-bottom: 1px dotted var(--dal-gold-soft);
+}
+.cp-item:last-child { border-bottom: none; }
+
+.cp-item::before {
+    content: '✦';
+    color: var(--dal-gold);
+    opacity: 0.5;
+    margin-right: 8px;
+    font-size: 0.7em;
+}
+
+.cp-item:hover {
+    background: var(--dal-gold-soft);
+}
+
+.cp-item-title { flex: 1; }
+
+.cp-meta { font-size: 0.72em; opacity: 0.5; font-style: italic; }
+
+#cp-more-wrap { display: flex; justify-content: center; }
+
+/* ---- 상세: 색인 카드 ---- */
+#cp-detail {
+    border-top: 2px solid var(--dal-gold);
+    padding-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cp-detail-title {
+    font-family: var(--dal-serif);
+    font-weight: 700;
+    font-size: 1.25em;
+    letter-spacing: 0.03em;
+    padding-left: 10px;
+    border-left: 3px solid var(--dal-gold);   /* 색인 탭 */
+    color: var(--SmartThemeEmColor, inherit);
+}
+
+.cp-img { display: flex; justify-content: center; }
+
+.cp-img img {
+    max-width: 100%;
+    max-height: 220px;
+    border-radius: 3px;
+    /* 액자 느낌: 금박 매트 + 그림자 */
+    border: 1px solid var(--dal-gold);
+    padding: 4px;
+    background: var(--SmartThemeBlurTintColor, #1e1e1e);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+}
+
+.cp-text {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border-radius: 3px;
+    border: 1px solid var(--dal-line);
+    border-left: 3px solid var(--dal-gold-soft);
+    background: var(--SmartThemeBlurTintColor, #1e1e1e);
+    color: inherit;
+    font-family: var(--dal-serif);   /* 본문도 고서 세리프로 */
+    font-size: 1.02em;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 130px;
+}
+
+/* 상세 하단 액션 영역 */
+.cp-detail-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.cp-back {
+    align-self: flex-start;
+    font-size: 0.82em;
+    opacity: 0.85;
+    background: transparent !important;
+    border: 1px solid var(--dal-gold-soft) !important;
+    border-radius: 3px !important;
+}
+
+.cp-translate {
+    font-size: 0.88em;
+    background: transparent !important;
+    border: 1px solid var(--dal-gold) !important;
+    border-radius: 3px !important;
+    color: var(--dal-gold) !important;
+}
+.cp-translate:hover { background: var(--dal-gold-soft) !important; }
+
+/* 위키에서 보기 링크 */
+.cp-wiki-link {
+    font-size: 0.85em;
+    color: var(--dal-gold);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--dal-gold);
+    padding-bottom: 1px;
+    letter-spacing: 0.02em;
+    transition: opacity 0.15s ease;
+}
+.cp-wiki-link:hover { opacity: 0.7; }
+
+/* ---- 세계관 선택 화면 ---- */
+.cp-prompt {
+    font-family: var(--dal-serif);
+    font-size: 1.15em;
+    font-style: italic;
+    margin: 14px 0;
+    text-align: center;
+    opacity: 0.9;
+}
+
+.cp-worlds {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 0;
+}
+
+.cp-worlds .cp-world {
+    font-family: var(--dal-serif);
+    font-size: 1.1em;
+    letter-spacing: 0.03em;
+    padding: 14px 16px !important;
+    border-radius: 4px !important;
+    border: 1px solid var(--dal-gold-soft) !important;
+    border-left: 4px solid var(--dal-gold) !important;   /* 책등(spine) 느낌 */
+    background: var(--black30a, rgba(0,0,0,0.12)) !important;
+    color: var(--SmartThemeBodyColor, inherit) !important;
+    text-align: left;
+    transition: border-left-width 0.18s ease, background 0.18s ease;
+}
+.cp-worlds .cp-world:hover {
+    border-left-width: 9px !important;
+    background: var(--dal-gold-soft) !important;
+}
+
+/* ---- 세계관 표시 바 ---- */
+.cp-world-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    padding-bottom: 6px;
+    border-bottom: 1px dotted var(--dal-gold-soft);
+}
+
+.cp-world-back {
+    font-size: 0.78em;
+    padding: 3px 8px !important;
+    opacity: 0.85;
+    background: transparent !important;
+    border: 1px solid var(--dal-gold-soft) !important;
+    border-radius: 3px !important;
+}
+
+.cp-world-label {
+    font-family: var(--dal-serif);
+    font-weight: 700;
+    font-size: 1.05em;
+    letter-spacing: 0.03em;
+    opacity: 0.95;
+}
+
+/* ---- 번역 프로필 설정 ---- */
+.cp-profile-row {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dotted var(--dal-gold-soft);
+    font-size: 0.85em;
+}
+
+.cp-profile-row label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-style: italic;
+    opacity: 0.9;
+}
+
+#cp-profile-select, #cp-profile-input {
+    padding: 6px 9px;
+    border-radius: 3px;
+    border: 1px solid var(--dal-line);
+    border-left: 3px solid var(--dal-gold);
+    background: var(--SmartThemeBlurTintColor, #1e1e1e);
+    color: inherit;
+    font-family: inherit;
+    font-style: normal;
+}
+
+.cp-profile-hint {
+    opacity: 0.6;
+    font-size: 0.9em;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* 접근성: 모션 줄이기 설정 존중 */
+@media (prefers-reduced-motion: reduce) {
+    .cp-cat, .cp-worlds .cp-world, .cp-wiki-link { transition: none; }
+}
