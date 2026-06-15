@@ -1,16 +1,42 @@
 // ============================================================
-// Dalchive  v0.14.0  (다세계관 아카이브)
+// Dalchive  v0.15.0  (다세계관 아카이브)
 // - 마법봉 메뉴 -> 팝업
-// - 먼저 세계관 선택 (Harry Potter / Marvel ...)
+// - 먼저 세계관 선택 (Harry Potter / Marvel / Call of Duty)
 // - 선택한 세계관의 위키에서 카테고리 둘러보기 + 검색 + 이미지
 // - 세계관별 위키 주소/카테고리/항목만 다르고 나머지 로직은 공통
 // ============================================================
 
+// ============================================================
+// ★★★ 항목 추가 방법 (캐릭터 등을 직접 넣기) ★★★
+//   1) 아래 WORLDS에서 원하는 세계관 -> 카테고리 배열을 찾는다
+//   2) 그 배열에 '위키 문서 제목', 을 한 줄 추가한다 (따옴표+쉼표 주의)
+//      예: '🪖 Characters (캐릭터)': [ ..., 'Captain MacMillan', '내가추가할이름', ]
+//   3) 정확한 위키 제목을 모르면, 확장에서 그 이름을 검색한 뒤
+//      나온 결과 제목을 그대로 복사해서 넣으면 된다.
+//
+// ★★★ 개발자 설명 덮어쓰기(OVERRIDES) — 7번 기능 ★★★
+//   위키가 표/틀 위주라 설명이 안 나오거나, 내가 직접 쓴 설명을 보여주고
+//   싶을 때 사용한다. 여기에 적어두면 그 항목은 위키 대신 이 내용을 보여준다.
+//   배포하면 모든 사용자에게 이 내용이 적용된다.
+//
+//   형식:  '위키문서제목': { desc: '보여줄 설명', title_ko: '한글이름(선택)', img: '이미지URL(선택)' }
+//     - desc     : 상세창에 표시할 설명 (필수). 줄바꿈은 \n
+//     - title_ko : 제목 옆에 함께 보여줄 한글 이름 (선택)
+//     - img      : 위키 이미지 대신 쓸 이미지 주소 (선택, 없으면 위키 이미지 사용)
+// ============================================================
+const OVERRIDES = {
+    // 예시 (필요 없으면 지워도 됨):
+    // 'Special Air Service/Members': {
+    //     desc: 'SAS(영국 공수특전단)의 주요 멤버: 존 프라이스, 고스트, 소프 맥타비시 등.',
+    // },
+    // 'John Price': {
+    //     title_ko: '존 프라이스 대위',
+    //     desc: '태스크 포스 141의 리더. 모던 워페어 시리즈의 베테랑 지휘관.',
+    // },
+};
+
 // ------------------------------------------------------------
 // 세계관 정의
-// ★ 세계관 추가: 아래 WORLDS에 { name, emoji, api, categories } 한 덩어리 추가
-// ★ 항목 추가: 해당 세계관 categories의 배열에 '위키 문서 제목', 한 줄 추가
-//   (정확한 제목을 모르면 확장에서 검색 후 결과 제목을 복사)
 // ------------------------------------------------------------
 const WORLDS = {
     harrypotter: {
@@ -388,16 +414,19 @@ function getConnectionProfiles() {
 // 번역 (SillyTavern의 연결 프로필 + genraw 사용)
 // ------------------------------------------------------------
 let originalText = '';   // 번역 전 원문 (토글용)
+let originalTitleText = '';   // 번역 전 제목 (토글용)
 let isTranslated = false;
 
 async function translateText() {
     const ta = document.querySelector('#cp-detail .cp-text');
     if (!ta) return;
     const btn = document.getElementById('cp-translate');
+    const titleEl = document.querySelector('#cp-detail .cp-detail-title');
 
     // 이미 번역됨 -> 원문으로 토글
     if (isTranslated) {
         ta.value = originalText;
+        if (titleEl && originalTitleText) titleEl.textContent = originalTitleText;
         isTranslated = false;
         btn.textContent = '🌐 번역';
         return;
@@ -411,25 +440,24 @@ async function translateText() {
 
     const ctx = SillyTavern.getContext();
     const profileId = (cpSettings.translateProfileId || '').trim();
-    const prompt = `Translate the following text into natural Korean. Output ONLY the Korean translation, with no notes or commentary.\n\n${source}`;
+    // 제목 + 본문을 한 번에 번역 (구분자로 나눠서 보냄 → 토큰 절약)
+    const titleSrc = currentDetailTitle || '';
+    const prompt =
+        `Translate the following into natural Korean. Keep the two sections separated by the marker "|||". ` +
+        `Output ONLY the Korean translation in the same format, no notes.\n\n` +
+        `TITLE: ${titleSrc}\n|||\nBODY: ${source}`;
 
     try {
         let result = '';
-
-        // 방법 1 (권장): ConnectionManagerRequestService
-        //   -> 전역 연결을 바꾸지 않고 지정 프로필로 단발 요청. RP 세션 안전.
         const svc = ctx.ConnectionManagerRequestService;
         if (profileId && svc && typeof svc.sendRequest === 'function') {
-            const res = await svc.sendRequest(profileId, prompt, 2000);
+            const res = await svc.sendRequest(profileId, prompt, 2200);
             result = extractText(res);
         }
-        // 방법 2 (폴백): 프로필 미지정 시 현재 연결로 generateRaw
-        //   -> 이때도 전역 연결을 바꾸지 않음 (현재 연결 그대로 사용)
         else if (!profileId && ctx.generateRaw) {
             const res = await ctx.generateRaw({ prompt, systemPrompt: '' });
             result = extractText(res);
         }
-        // 프로필은 지정됐는데 서비스가 없는 구버전 -> 안내 (RP 보호 위해 프로필 전환 안 함)
         else if (profileId) {
             toastr.warning('이 SillyTavern 버전은 안전한 프로필 번역을 지원하지 않아, 번역 프로필 설정을 비우고 현재 연결로 번역하세요.');
             btn.textContent = '🌐 번역';
@@ -438,7 +466,11 @@ async function translateText() {
         }
 
         if (result && result.trim()) {
-            ta.value = result.trim();
+            // 결과를 제목/본문으로 분리
+            const { koTitle, koBody } = splitTranslation(result);
+            ta.value = koBody || result.trim();
+            // 제목: "원문 (한글번역)" 병기
+            if (titleEl && koTitle) titleEl.textContent = `${titleSrc} (${koTitle})`;
             isTranslated = true;
             btn.textContent = '↩ 원문 보기';
         } else {
@@ -465,6 +497,20 @@ function extractText(res) {
     return '';
 }
 
+// 번역 결과를 제목/본문으로 분리 (TITLE: ... ||| BODY: ... 형식)
+function splitTranslation(result) {
+    let koTitle = '', koBody = '';
+    const parts = result.split('|||');
+    if (parts.length >= 2) {
+        koTitle = parts[0].replace(/^\s*(TITLE|제목)\s*[:：]?\s*/i, '').trim();
+        koBody = parts[1].replace(/^\s*(BODY|본문|내용)\s*[:：]?\s*/i, '').trim();
+    } else {
+        // 구분자 없이 왔으면 전체를 본문으로
+        koBody = result.replace(/^\s*(BODY|본문)\s*[:：]?\s*/i, '').trim();
+    }
+    return { koTitle, koBody };
+}
+
 // ------------------------------------------------------------
 // 화면 전환
 // ------------------------------------------------------------
@@ -480,23 +526,50 @@ function showListView() {
     document.getElementById('cp-detail').style.display = 'none';
 }
 
-async function openDetail(title) {
-    const full = document.getElementById('cp-full')?.checked;
+let currentDetailTitle = '';   // 현재 보고 있는 항목의 원래 제목 (전체 가져오기·번역용)
+
+async function openDetail(title, forceFull) {
+    currentDetailTitle = title;
+    const full = (forceFull !== undefined) ? forceFull : !!document.getElementById('cp-full')?.checked;
     document.getElementById('cp-list-view').style.display = 'none';
     const detail = document.getElementById('cp-detail');
     detail.style.display = 'flex';
-    detail.querySelector('.cp-detail-title').textContent = title;
+
+    // 제목 표시 (override에 한글 이름 있으면 "원문 (한글)" 병기)
+    const ov = OVERRIDES[title];
+    const titleEl = detail.querySelector('.cp-detail-title');
+    titleEl.textContent = (ov && ov.title_ko) ? `${title} (${ov.title_ko})` : title;
+
     detail.querySelector('.cp-img').innerHTML = '';
     // 번역 상태 초기화
     isTranslated = false;
     originalText = '';
+    originalTitleText = titleEl.textContent;
     const tbtn = document.getElementById('cp-translate');
     if (tbtn) tbtn.textContent = '🌐 번역';
-    // 위키 원문 링크 설정 (도메인 + /wiki/제목)
+    // 위키 원문 링크
     const wikiLink = document.getElementById('cp-wiki-link');
     if (wikiLink) wikiLink.href = wikiPageUrl(title);
+
     const ta = detail.querySelector('.cp-text');
+    const fullBtn = document.getElementById('cp-load-full');
+
+    // 1) 개발자 override가 있으면 위키 대신 그 설명 표시
+    if (ov && ov.desc) {
+        if (ov.img) {
+            detail.querySelector('.cp-img').innerHTML = `<img src="${ov.img}" alt="${title}" />`;
+        } else {
+            const imgUrl = await fetchImage(title);
+            if (imgUrl) detail.querySelector('.cp-img').innerHTML = `<img src="${imgUrl}" alt="${title}" />`;
+        }
+        ta.value = ov.desc;
+        if (fullBtn) fullBtn.style.display = 'none';   // override는 전체버튼 불필요
+        return;
+    }
+
+    // 2) 일반 위키 항목
     ta.value = '불러오는 중...';
+    if (fullBtn) fullBtn.style.display = full ? 'none' : '';   // 요약일 때만 "전체 가져오기" 노출
     const [imgUrl, raw] = await Promise.all([fetchImage(title), fetchWikitext(title, full)]);
     if (imgUrl) detail.querySelector('.cp-img').innerHTML = `<img src="${imgUrl}" alt="${title}" />`;
     ta.value = cleanWikitext(raw, full) || '(설명을 찾지 못했어요. 검색으로 다른 제목을 시도해 보세요.)';
@@ -573,7 +646,10 @@ function popupHTML() {
                 <span id="cp-world-label" class="cp-world-label"></span>
             </div>
             <div class="cp-search-row">
-                <input type="text" id="cp-search" placeholder="검색어 (영문)" />
+                <div class="cp-search-wrap">
+                    <input type="text" id="cp-search" placeholder="검색어 (영문)" />
+                    <button id="cp-search-clear" class="cp-search-clear" title="검색어 지우기" type="button">✕</button>
+                </div>
                 <button id="cp-search-btn" class="menu_button">검색</button>
             </div>
             <div class="cp-cats" id="cp-cats"></div>
@@ -592,6 +668,7 @@ function popupHTML() {
             <textarea class="cp-text" rows="8"></textarea>
             <div class="cp-detail-actions">
                 <button id="cp-translate" class="menu_button cp-translate">🌐 번역</button>
+                <button id="cp-load-full" class="menu_button cp-load-full">📄 전체 가져오기</button>
                 <a id="cp-wiki-link" class="cp-wiki-link" href="#" target="_blank" rel="noopener noreferrer">📖 위키에서 보기 ↗</a>
             </div>
         </div>
@@ -625,6 +702,20 @@ function wirePopup() {
     document.getElementById('cp-search').addEventListener('keydown', e => {
         if (e.key === 'Enter') doSearch();
     });
+    // 검색어 초기화 버튼 (4번)
+    const searchInput = document.getElementById('cp-search');
+    const clearBtn = document.getElementById('cp-search-clear');
+    const updateClearBtn = () => { clearBtn.style.display = searchInput.value ? '' : 'none'; };
+    searchInput.addEventListener('input', updateClearBtn);
+    clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        updateClearBtn();
+        searchInput.focus();
+        // 검색 결과를 지우고 현재 카테고리 안내로 복귀
+        document.getElementById('cp-list').innerHTML = '';
+        document.getElementById('cp-status').textContent = '카테고리를 누르거나 검색해 보세요.';
+    });
+    updateClearBtn();
 
     // 항목 클릭
     document.getElementById('cp-list').addEventListener('click', e => {
@@ -636,6 +727,10 @@ function wirePopup() {
     document.getElementById('cp-back').addEventListener('click', showListView);
     document.getElementById('cp-world-back').addEventListener('click', showWorldSelect);
     document.getElementById('cp-translate').addEventListener('click', translateText);
+    // 상세에서 전체 가져오기 (3번): 같은 항목을 전체 모드로 다시 연다
+    document.getElementById('cp-load-full').addEventListener('click', () => {
+        if (currentDetailTitle) openDetail(currentDetailTitle, true);
+    });
     // 번역 프로필 드롭다운 채우기 (value = 프로필 ID)
     const profSelect = document.getElementById('cp-profile-select');
     if (profSelect) {
@@ -686,5 +781,5 @@ jQuery(() => {
     const timer = setInterval(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
-    console.log('[Dalchive v0.14] loaded');
+    console.log('[Dalchive v0.15] loaded');
 });
