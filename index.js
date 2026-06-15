@@ -199,6 +199,61 @@ const WORLDS = {
     },
 };
 
+// ============================================================
+// ★★★ 원격 데이터 (깃허브 JSON) ★★★
+//   아래 URL의 JSON을 읽어와, 코드에 박힌 WORLDS/OVERRIDES에 합칩니다.
+//   덕분에 이 파일을 재배포하지 않아도, 깃허브에서 JSON만 고치면
+//   모든 사용자에게 자동 반영됩니다. (사용자는 업데이트 불필요)
+//
+//   ※ 설정 방법은 README의 "깃허브 원격 데이터" 항목을 참고하세요.
+//   ※ 원격을 안 쓰려면 REMOTE_DATA_URL 을 '' (빈 문자열)로 두세요.
+//      그러면 코드에 박힌 기본값만 사용합니다.
+//
+//   JSON 형식:
+//   {
+//     "items":     { "cod": { "🪖 Characters (캐릭터)": ["새 이름"] } },
+//     "overrides": { "John Price": { "title_ko": "존 프라이스", "desc": "설명" } }
+//   }
+// ============================================================
+const REMOTE_DATA_URL = ''; // 예: 'https://raw.githubusercontent.com/사용자명/저장소/main/dalchive-data.json'
+
+// 원격 JSON을 받아 WORLDS/OVERRIDES에 병합 (실패하면 조용히 기본값 유지)
+async function loadRemoteData() {
+    if (!REMOTE_DATA_URL) return;
+    try {
+        const res = await fetch(REMOTE_DATA_URL, { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const remote = await res.json();
+        mergeRemoteData(remote);
+        console.log('[Dalchive] 원격 데이터 적용됨');
+    } catch (e) {
+        // 원격 실패 = 코드 기본값으로 그대로 동작 (안전)
+        console.warn('[Dalchive] 원격 데이터 불러오기 실패, 기본값 사용:', e.message);
+    }
+}
+
+function mergeRemoteData(remote) {
+    if (!remote || typeof remote !== 'object') return;
+    // 1) items: 기존 카테고리 배열에 추가 (중복 제거, 새 카테고리도 허용)
+    if (remote.items && typeof remote.items === 'object') {
+        for (const [worldId, cats] of Object.entries(remote.items)) {
+            if (!WORLDS[worldId] || !cats || typeof cats !== 'object') continue;
+            for (const [cat, list] of Object.entries(cats)) {
+                if (!Array.isArray(list)) continue;
+                if (!WORLDS[worldId].categories[cat]) WORLDS[worldId].categories[cat] = [];
+                const existing = WORLDS[worldId].categories[cat];
+                for (const item of list) {
+                    if (typeof item === 'string' && !existing.includes(item)) existing.push(item);
+                }
+            }
+        }
+    }
+    // 2) overrides: 원격이 우선 (덮어쓰기)
+    if (remote.overrides && typeof remote.overrides === 'object') {
+        Object.assign(OVERRIDES, remote.overrides);
+    }
+}
+
 // 현재 선택된 세계관 (선택 전엔 null)
 let currentWorld = null;
 function api() { return WORLDS[currentWorld].api; }
@@ -781,5 +836,6 @@ jQuery(() => {
     const timer = setInterval(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
-    console.log('[Dalchive v0.15] loaded');
+    loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
+    console.log('[Dalchive v0.16] loaded');
 });
