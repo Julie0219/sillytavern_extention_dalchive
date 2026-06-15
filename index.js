@@ -215,7 +215,7 @@ const WORLDS = {
 //     "overrides": { "John Price": { "title_ko": "존 프라이스", "desc": "설명" } }
 //   }
 // ============================================================
-const REMOTE_DATA_URL = ''; // 예: 'https://raw.githubusercontent.com/사용자명/저장소/main/dalchive-data.json'
+const REMOTE_DATA_URL = ''; // 예: 'https://raw.githubusercontent.com/Julie0219/sillytavern_extention_dalchive/refs/heads/main/dalchive-data.json'
 
 // 원격 JSON을 받아 WORLDS/OVERRIDES에 병합 (실패하면 조용히 기본값 유지)
 async function loadRemoteData() {
