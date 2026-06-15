@@ -162,12 +162,11 @@ const WORLDS = {
         api: 'https://callofduty.fandom.com/api.php',
         categories: {
             '🪖 Characters (캐릭터)': [
-                'John Price', 'Simon "Ghost" Riley', 'John "Soap" MacTavish', 'Yuri',
-                'Vladimir Makarov', 'Khaled Al-Asad', 'Imran Zakhaev', 'Alex Mason',
-                'Frank Woods', 'Viktor Reznov', 'Raul Menendez', 'Jason Hudson',
-                'Edward Richtofen', 'Tank Dempsey', 'Nikolai Belinski', 'Takeo Masaki',
-                'Gabriel Rorke', 'Logan Walker', 'Jonathan Irons', 'Captain MacMillan',
-                'Gaz', 'Roach', 'Sandman', 'Kamarov', 'Nikolai',
+                'John Price', 'Simon "Ghost" Riley', 'John "Soap" MacTavish',
+                'Kyle "Gaz" Garrick', 'Alejandro Vargas', 'Rodolfo Parra',
+                'Kate Laswell', 'Farah Karim', 'Alex Keller', 'Phillip Graves',
+                'Keegan P. Russ', 'Kim "Horangi" Hong-jin', 'König', 'Nikto',
+                'Vladimir Makarov', 'Valeria Garza', 'Roach', 'Nikolai',
             ],
             '🏴 Factions (세력)': [
                 'Task Force 141', 'Spetsnaz', 'Ultranationalists', 'SAS',
@@ -188,12 +187,10 @@ const WORLDS = {
                 'Care Package', 'Predator Missile', 'UAV', 'Sentry Gun', 'Riot Shield',
                 'Ballistic Knife', 'Monkey Bomb',
             ],
-            '🗺️ Maps (맵)': [
-                'Nuketown', 'Nuketown 2025', 'Highrise', 'Terminal', 'Rust', 'Shipment',
-                'Crash', 'Crossfire', 'Backlot', 'Vacant', 'Favela', 'Scrapyard', 'Estate',
-                'Summit', 'Firing Range', 'Hijacked', 'Raid', 'Standoff', 'Der Riese',
-                'Kino der Toten', 'Shi No Numa', 'Nacht der Untoten', 'Verruckt', 'Ascension',
-                'Moon', 'Origins', 'Mob of the Dead',
+            '🗺️ Locations (장소)': [
+                'Urzikstan', 'Verdansk', 'Las Almas', 'Al Mazrah',
+                'United Republic of Adal', 'Kastovia', 'Vondel',
+                'Rebirth Island', 'Caldera',
             ],
         },
     },
@@ -215,7 +212,7 @@ const WORLDS = {
 //     "overrides": { "John Price": { "title_ko": "존 프라이스", "desc": "설명" } }
 //   }
 // ============================================================
-const REMOTE_DATA_URL = ''; // 예: 'https://raw.githubusercontent.com/Julie0219/sillytavern_extention_dalchive/refs/heads/main/dalchive-data.json'
+const REMOTE_DATA_URL = ''; // 예: 'https://raw.githubusercontent.com/사용자명/저장소/main/dalchive-data.json'
 
 // 원격 JSON을 받아 WORLDS/OVERRIDES에 병합 (실패하면 조용히 기본값 유지)
 async function loadRemoteData() {
@@ -680,7 +677,10 @@ function popupHTML() {
         `<button class="cp-world menu_button" data-world="${id}">${w.emoji} ${w.name}</button>`).join('');
     return `
     <div id="cp-root">
-        <div class="cp-title">📚 Dalchive</div>
+        <div class="cp-title">
+            <span class="cp-title-text">📚 Dalchive</span>
+            <button id="cp-close" class="cp-close" title="닫기" type="button">✕</button>
+        </div>
 
         <!-- 세계관 선택 -->
         <div id="cp-world-view">
@@ -717,7 +717,6 @@ function popupHTML() {
 
         <!-- 상세 -->
         <div id="cp-detail" style="display:none;">
-            <button id="cp-back" class="menu_button cp-back">← 목록으로</button>
             <div class="cp-detail-title"></div>
             <div class="cp-img"></div>
             <textarea class="cp-text" rows="8"></textarea>
@@ -726,6 +725,7 @@ function popupHTML() {
                 <button id="cp-load-full" class="menu_button cp-load-full">📄 전체 가져오기</button>
                 <a id="cp-wiki-link" class="cp-wiki-link" href="#" target="_blank" rel="noopener noreferrer">📖 위키에서 보기 ↗</a>
             </div>
+            <button id="cp-back" class="menu_button cp-back">← 목록으로</button>
         </div>
     </div>`;
 }
@@ -782,6 +782,21 @@ function wirePopup() {
     document.getElementById('cp-back').addEventListener('click', showListView);
     document.getElementById('cp-world-back').addEventListener('click', showWorldSelect);
     document.getElementById('cp-translate').addEventListener('click', translateText);
+    // 우측 상단 ✕ 닫기 버튼
+    const closeBtn = document.getElementById('cp-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            try {
+                if (cpPopup && typeof cpPopup.completeCancelled === 'function') cpPopup.completeCancelled();
+                else if (cpPopup && typeof cpPopup.complete === 'function') cpPopup.complete();
+                else if (cpPopup && typeof cpPopup.hide === 'function') cpPopup.hide();
+                else {
+                    // 폴백: SillyTavern 기본 닫기 버튼을 대신 누름
+                    document.querySelector('.popup:has(#cp-root) .popup-button-ok')?.click();
+                }
+            } catch (e) { /* 무시 */ }
+        });
+    }
     // 상세에서 전체 가져오기 (3번): 같은 항목을 전체 모드로 다시 연다
     document.getElementById('cp-load-full').addEventListener('click', () => {
         if (currentDetailTitle) openDetail(currentDetailTitle, true);
@@ -805,11 +820,12 @@ function wirePopup() {
     }
 }
 
+let cpPopup = null;
 async function openPopup() {
     loadSettings();
     const { Popup, POPUP_TYPE } = SillyTavern.getContext();
-    const popup = new Popup(popupHTML(), POPUP_TYPE.TEXT, '', { wide: true, large: true, okButton: '닫기' });
-    popup.show();
+    cpPopup = new Popup(popupHTML(), POPUP_TYPE.TEXT, '', { wide: true, large: true, okButton: '닫기' });
+    cpPopup.show();
     setTimeout(() => { wirePopup(); showWorldSelect(); }, 50);
 }
 
@@ -837,5 +853,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v0.16] loaded');
+    console.log('[Dalchive v0.17] loaded');
 });
