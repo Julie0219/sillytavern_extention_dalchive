@@ -197,6 +197,40 @@ const WORLDS = {
             ],
         },
     },
+    residentevil: {
+        name: 'Resident Evil / Biohazard',
+        emoji: '🧟',
+        api: 'https://residentevil.fandom.com/api.php',
+        categories: {
+            '👤 Characters (인물)': [
+                'Leon Scott Kennedy', 'Chris Redfield', 'Jill Valentine', 'Claire Redfield',
+                'Ada Wong', 'Albert Wesker', 'Rebecca Chambers', 'Barry Burton',
+                'Carlos Oliveira', 'Sherry Birkin', 'William Birkin', 'Annette Birkin',
+                'Ashley Graham', 'Jack Krauser', 'Luis Sera', 'Ramon Salazar',
+                'Osmund Saddler', 'HUNK', 'Ethan Winters', 'Mia Winters',
+                'Alcina Dimitrescu', 'Karl Heisenberg', 'Sheva Alomar', 'Helena Harper',
+                'Ozwell E. Spencer', 'James Marcus',
+            ],
+            '🧟 Creatures & B.O.W. (크리처)': [
+                'Tyrant', 'Nemesis-T Type', 'Zombie', 'Hunter', 'Cerberus',
+                'Licker', 'Crimson Head', 'Chimera', 'Ustanak', 'Regenerador',
+                'Plaga', 'Ganado',
+            ],
+            '🏢 Organizations (조직)': [
+                'Umbrella Corporation', 'S.T.A.R.S.', 'B.S.A.A.', 'Tricell',
+                'Division of Security Operations', 'Raccoon City Police Department',
+                'Neo Umbrella', 'Blue Umbrella', 'Los Iluminados',
+            ],
+            '🧬 Viruses & Pathogens (바이러스·병원체)': [
+                't-Virus', 'G-Virus', 't-Veronica', 'Uroboros', 'C-Virus',
+                'Las Plagas', 'Cadou', 'Megamycete', 'NE-α Type',
+            ],
+            '🗺️ Locations (장소)': [
+                'Raccoon City', 'Spencer Mansion', 'Arklay Mountains',
+                'Tall Oaks', 'Terragrigia', 'Baker Estate', 'Rockfort Island',
+            ],
+        },
+    },
 };
 
 // ============================================================
@@ -319,6 +353,26 @@ async function fetchImage(title) {
 // ------------------------------------------------------------
 // 위키텍스트 청소
 // ------------------------------------------------------------
+// [[File:...]] / [[Image:...]]를 균형 카운팅으로 제거 (중첩 [[ ]] 무제한 대응)
+function removeFileLinks(text) {
+    let result = '';
+    let i = 0;
+    while (i < text.length) {
+        if (/^\[\[(?:File|Image):/i.test(text.slice(i, i + 8))) {
+            let depth = 0, j = i;
+            while (j < text.length) {
+                if (text.startsWith('[[', j)) { depth++; j += 2; }
+                else if (text.startsWith(']]', j)) { depth--; j += 2; if (depth === 0) break; }
+                else j++;
+            }
+            i = j;
+        } else {
+            result += text[i]; i++;
+        }
+    }
+    return result;
+}
+
 function stripMarkup(text) {
     if (!text) return '';
     text = text.replace(/<ref[^>]*>[\s\S]*?<\/ref>/g, '');
@@ -326,8 +380,8 @@ function stripMarkup(text) {
     text = text.replace(/\{\{r\|[^}]*\}\}/gi, '');       // 마블 참조 {{r|...}}
     text = text.replace(/\{\{cl\|[^}]*\}\}/gi, '');      // 마블 참조 {{cl|...}}
     text = text.replace(/\{\{citation\}\}/gi, '');
-    // 이미지: [[File:...]] / [[Image:...]] 통째 제거
-    text = text.replace(/\[\[(?:File|Image):[^\]]*\]\]/gi, '');
+    // 이미지: [[File:...]] / [[Image:...]] 통째 제거 — 균형 카운팅으로 중첩 무제한 대응
+    text = removeFileLinks(text);
     text = text.replace(/^\s*thumb\s*\|[^\n]*$/gim, '');
     text = text.replace(/thumb\|(?:right|left|center)?\|?\d*px\|[^\n]*/gi, '');
 
@@ -371,7 +425,7 @@ function removeAppendices(wikitext) {
     t = t.replace(/\n=+\s*List of Maps[\s\S]*$/i, '');
     t = t.replace(/\[\[Category:[^\]]*\]\]/gi, '');
     t = t.replace(/^[a-z]{2,3}:[^\n]*$/gim, '');
-    t = t.replace(/\[\[File:[^\]]*\]\]/gi, '');
+    t = removeFileLinks(t);
     t = t.replace(/^\s*thumb\|.*$/gim, '');
     t = t.replace(/^\s*\*\s*$/gm, '');
     return t;
@@ -467,7 +521,11 @@ function cleanGeneric(wikitext) {
     }
     let body = removeAppendices(wikitext);
     body = body.replace(/\{\{[^\n]*infobox[\s\S]*?\n\}\}/gi, '');
-    body = body.replace(/\{\{(?:w|nowrap|lang|small|nihongo)\|([^{}|]*)\}\}/gi, '$1');
+    // {{For|...}} {{Quote|...}} 등 hatnote/인용 템플릿은 본문에서 제거
+    body = body.replace(/\{\{(?:For|Quote|About|Main|See also|Redirect)\b[^{}]*(?:\{\{[^{}]*\}\}[^{}]*)*\}\}/gi, '');
+    // {{Nihongo|영어|일본어|로마자|...}} -> 첫 인자(영어 이름)만 남김
+    body = body.replace(/\{\{[Nn]ihongo\s*\|\s*([^{}|]*)\|[^{}]*\}\}/g, '$1');
+    body = body.replace(/\{\{(?:w|nowrap|lang|small)\|([^{}|]*)\}\}/gi, '$1');
     let prev;
     do { prev = body; body = body.replace(/\{\{[^{}]*\}\}/g, ''); } while (body !== prev);
     body = stripMarkup(body);
@@ -898,5 +956,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v0.20] loaded');
+    console.log('[Dalchive v1.0] loaded');
 });
