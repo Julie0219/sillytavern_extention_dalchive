@@ -17,6 +17,7 @@
 - ⚡ 해리포터 (Harry Potter)
 - 🦸 마블 (Marvel Universe)
 - 🎯 콜 오브 듀티 (Call of Duty)
+- 🧟 레지던트 이블 / 바이오하자드 (Resident Evil / Biohazard)
 
 ## 📥 설치 방법
 
