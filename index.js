@@ -145,7 +145,7 @@ const WORLDS = {
                 'Infinity Gauntlet',
             ],
             '👽 Races (종족)': [
-                'Mutants (Homo superior)', 'Asgardians', 'Inhumans', 'Skrulls', 'Kree', 'Eternals (Earth-616)',
+                'Mutants (Homo superior)', 'Asgardians', 'Inhumans (Inhomo supremis)', 'Deviant Skrulls', 'Kree', 'Eternals (Earth-616)',
                 'Celestials', 'Symbiotes', 'Atlanteans', 'Watchers',
             ],
             '🌆 Locations (장소)': [
@@ -177,11 +177,11 @@ const WORLDS = {
                 'Urzikstan Liberation Force', 'Los Vaqueros', 'Las Almas Cartel', 'Al-Qatala',
             ],
             '🔫 Weapons (무기)': [
-                'AK-47', 'M4A1', 'M16', 'AUG', 'MP5', 'M1911', 'Desert Eagle', 'Intervention',
-                'Barrett .50cal', 'RPG-7', 'Famas', 'Galil', 'Commando', 'AK-74u', 'PP90M1',
+                'AK-47', 'M4A1', 'M16', 'AUG', 'MP5', 'M1911', 'Desert Eagle', 'Intervention (weapon)',
+                'Barrett .50cal', 'RPG-7', 'Famas', 'Galil', 'Commando (weapon)', 'AK-74u', 'PP90M1',
                 'ACR', 'SCAR-H', 'UMP45', 'P90', 'Vector', 'Dragunov', 'Ray Gun', 'Thundergun',
                 'Wunderwaffe DG-2', 'Combat Knife', 'Throwing Knife', 'Tomahawk', 'Crossbow',
-                'M1 Garand', 'Thompson', 'MP40', 'Kar98k', 'PPSh-41', 'Browning M1919',
+                'M1 Garand', 'Thompson (weapon)', 'MP40', 'Kar98k', 'PPSh-41', 'Browning M1919',
             ],
             '⚙️ Equipment & Perks (장비·퍽)': [
                 'Juggernog', 'Speed Cola', 'Quick Revive', 'Double Tap Root Beer', 'Stamin-Up',
@@ -898,5 +898,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v0.19] loaded');
+    console.log('[Dalchive v0.20] loaded');
 });
