@@ -135,8 +135,8 @@ const WORLDS = {
             ],
             '👥 Teams (팀·조직)': [
                 'Avengers (Earth-616)', 'X-Men (Earth-616)', 'Fantastic Four (Earth-616)',
-                'Guardians of the Galaxy (Earth-616)', 'S.H.I.E.L.D. (Earth-616)', 'HYDRA (Earth-616)',
-                'Defenders (Earth-616)', 'Inhumans (Earth-616)', 'Brotherhood of Mutants (Earth-616)',
+                'Guardians of the Galaxy (Earth-616)', 'S.H.I.E.L.D. (Earth-616)', 'Hydra (Earth-616)',
+                'Defenders (Earth-616)', 'Inhumans (Earth-616)', 'Brotherhood of Evil Mutants (Earth-616)',
                 'Sinister Six (Earth-616)', 'Thunderbolts (Earth-616)', 'Nova Corps (Earth-616)',
             ],
             '💎 Items (아이템·유물)': [
@@ -145,7 +145,7 @@ const WORLDS = {
                 'Infinity Gauntlet',
             ],
             '👽 Races (종족)': [
-                'Mutants', 'Asgardians', 'Inhumans', 'Skrulls', 'Kree', 'Eternals (Earth-616)',
+                'Mutants (Homo superior)', 'Asgardians', 'Inhumans', 'Skrulls', 'Kree', 'Eternals (Earth-616)',
                 'Celestials', 'Symbiotes', 'Atlanteans', 'Watchers',
             ],
             '🌆 Locations (장소)': [
@@ -169,9 +169,12 @@ const WORLDS = {
                 'Vladimir Makarov', 'Valeria Garza', 'Roach', 'Nikolai',
             ],
             '🏴 Factions (세력)': [
-                'Task Force 141', 'Spetsnaz', 'Ultranationalists', 'SAS',
-                'Marines', 'Delta Force', 'Navy SEALs', 'Inner Circle', 'Cordis Die',
-                'Atlas Corporation', 'Sentinel Task Force', 'Federation', 'CIA',
+                'Task Force 141', 'Spetsnaz/Modern Warfare (Reboot)', 'Ultranationalists',
+                'Special Air Service/Modern Warfare', 'United States Marine Corps/Modern Warfare',
+                'Delta Force', 'United States Navy/Modern Warfare', 'Inner Circle', 'Cordis Die',
+                'Atlas Corporation', 'Sentinel Task Force', 'Federation',
+                'Central Intelligence Agency/Modern Warfare (Reboot)',
+                'Urzikstan Liberation Force', 'Los Vaqueros', 'Las Almas Cartel', 'Al-Qatala',
             ],
             '🔫 Weapons (무기)': [
                 'AK-47', 'M4A1', 'M16', 'AUG', 'MP5', 'M1911', 'Desert Eagle', 'Intervention',
@@ -289,8 +292,13 @@ async function searchWiki(query) {
     return (data?.query?.search ?? []).map(s => ({ title: s.title, wordcount: s.wordcount }));
 }
 
+// API 제목 인코딩: 슬래시(하위문서)는 유지하고 나머지만 인코딩
+function encodeTitle(title) {
+    return title.split('/').map(encodeURIComponent).join('/');
+}
+
 async function fetchWikitext(title, fullArticle, depth = 0) {
-    let p = `action=parse&page=${encodeURIComponent(title)}&prop=wikitext`;
+    let p = `action=parse&page=${encodeTitle(title)}&prop=wikitext`;
     if (!fullArticle) p += '&section=0';
     const data = await apiGet(p);
     const raw = data?.parse?.wikitext?.['*'] ?? '';
@@ -301,7 +309,7 @@ async function fetchWikitext(title, fullArticle, depth = 0) {
 
 async function fetchImage(title) {
     try {
-        const data = await apiGet(`action=query&prop=pageimages&titles=${encodeURIComponent(title)}&pithumbsize=300&redirects=1`);
+        const data = await apiGet(`action=query&prop=pageimages&titles=${encodeTitle(title)}&pithumbsize=300&redirects=1`);
         const pages = data?.query?.pages ?? {};
         const first = Object.values(pages)[0];
         return first?.thumbnail?.source ?? null;
@@ -392,10 +400,10 @@ function extractField(wikitext, field) {
 }
 
 function cleanMarvel(wikitext, fullArticle) {
-    // RP에 유용하고 짧은 핵심 정보만 (Affiliation 등 길고 복잡한 필드는 제외)
+    // 짧은 핵심 정보 필드 (Origin은 길 수 있어 여기서 제외하고 본문으로 따로 처리)
     const fieldLabels = {
         CurrentAlias: 'Alias', RealName: 'Real name', Gender: 'Gender',
-        Origin: 'Origin', Identity: 'Identity', Citizenship: 'Citizenship',
+        Identity: 'Identity', Citizenship: 'Citizenship',
         Universe: 'Universe', Species: 'Species', Status: 'Status',
     };
     const fields = [];
@@ -408,20 +416,35 @@ function cleanMarvel(wikitext, fullArticle) {
             }
         }
     }
-    // 전체 모드면 Overview + History 둘 다, 아니면 Overview(없으면 History)
-    let desc = '';
+    // 본문: Origin(긴 설명) 우선. Overview/History도 활용하되 링크목록뿐이면 제외.
     const overview = extractField(wikitext, 'Overview');
     const history = extractField(wikitext, 'History');
+    const origin = extractField(wikitext, 'Origin');
+    // 내용이 링크 목록(* 항목)뿐이면 본문으로 쓰지 않음
+    const isJustLinks = (s) => {
+        if (!s) return true;
+        const cleaned = stripMarkup(s).trim();
+        if (!cleaned) return true;
+        const lines = cleaned.split('\n').filter(l => l.trim());
+        return lines.length > 0 && lines.every(l => l.trim().startsWith('*') || l.trim().length < 3);
+    };
+    const ovText = isJustLinks(overview) ? '' : stripMarkup(overview);
+    const histText = isJustLinks(history) ? '' : stripMarkup(history);
+    const orgText = origin ? stripMarkup(origin) : '';
+    let desc = '';
     if (fullArticle) {
-        if (overview) desc += stripMarkup(overview);
-        if (history) desc += (desc ? '\n\n' : '') + stripMarkup(history);
+        const parts = [];
+        if (ovText) parts.push(ovText);
+        if (orgText) parts.push('Origin: ' + orgText);
+        if (histText) parts.push(histText);
+        desc = parts.join('\n\n');
     } else {
-        desc = stripMarkup(overview || history || '');
+        // 요약: Overview가 있으면 그것(일반 캐릭터), 없으면 Origin(종족 등) > History
+        desc = ovText || orgText || histText || '';
     }
     let out = '';
     if (fields.length) out += fields.join('\n') + '\n\n';
     out += desc;
-    // 요약 모드에서만 과도하게 길면 잘라줌 (전체 모드는 안 자름)
     if (!fullArticle && out.length > 4000) out = out.slice(0, 4000).trim() + ' …';
     return out.trim() || stripMarkup(wikitext).slice(0, fullArticle ? 100000 : 800);
 }
@@ -875,5 +898,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v0.18] loaded');
+    console.log('[Dalchive v0.19] loaded');
 });
