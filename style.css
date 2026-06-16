@@ -358,3 +358,8 @@
     .cp-worlds .cp-world:hover { transform: none; }
     .cp-item:hover { padding-left: 14px; }
 }
+
+/* 기본 닫기 버튼 영역 숨김 (우리는 우측 상단 ✕로 닫음) */
+.popup:has(#cp-root) .popup-controls {
+    display: none !important;
+}

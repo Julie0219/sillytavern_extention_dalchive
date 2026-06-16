@@ -351,10 +351,16 @@ function stripMarkup(text) {
 function removeAppendices(wikitext) {
     let t = wikitext;
     const cutHeadings = ['Appearances', 'Notes and references', 'References', 'Behind the scenes',
-        'See also', 'External links', 'Gallery', 'Etymology', 'Notes', 'Sources', 'Trivia', 'Links and References'];
+        'See also', 'External links', 'Gallery', 'Etymology', 'Notes', 'Sources', 'Trivia', 'Links and References',
+        // COD 등 게임 위키에서 RP에 불필요한 섹션
+        'Personalization', 'Skins', 'Quips', 'Quotes', 'Transcript', 'Voice quotes', 'Voicelines',
+        'Variants', 'Achievements', 'Trophies', 'Videos', 'Audio', 'Charms', 'Camouflages', 'Attachments',
+        'Weapon levels', 'Multiplayer', 'Trivia and references'];
     for (const h of cutHeadings) {
         t = t.replace(new RegExp(`\\n=+\\s*${h}\\s*=+[\\s\\S]*$`, 'i'), '');
     }
+    // 가변 제목 섹션: "List of Maps Set in ...", "List of ..." 게임맵 목록
+    t = t.replace(/\n=+\s*List of Maps[\s\S]*$/i, '');
     t = t.replace(/\[\[Category:[^\]]*\]\]/gi, '');
     t = t.replace(/^[a-z]{2,3}:[^\n]*$/gim, '');
     t = t.replace(/\[\[File:[^\]]*\]\]/gi, '');
@@ -579,10 +585,12 @@ function showListView() {
 }
 
 let currentDetailTitle = '';   // 현재 보고 있는 항목의 원래 제목 (전체 가져오기·번역용)
+let currentDetailFull = false; // 현재 상세가 전체 모드인지 (요약 토글용)
 
 async function openDetail(title, forceFull) {
     currentDetailTitle = title;
     const full = (forceFull !== undefined) ? forceFull : !!document.getElementById('cp-full')?.checked;
+    currentDetailFull = full;
     document.getElementById('cp-list-view').style.display = 'none';
     const detail = document.getElementById('cp-detail');
     detail.style.display = 'flex';
@@ -615,13 +623,17 @@ async function openDetail(title, forceFull) {
             if (imgUrl) detail.querySelector('.cp-img').innerHTML = `<img src="${imgUrl}" alt="${title}" />`;
         }
         ta.value = ov.desc;
-        if (fullBtn) fullBtn.style.display = 'none';   // override는 전체버튼 불필요
+        if (fullBtn) fullBtn.style.display = 'none';   // override는 전체/요약 버튼 불필요
         return;
     }
 
     // 2) 일반 위키 항목
     ta.value = '불러오는 중...';
-    if (fullBtn) fullBtn.style.display = full ? 'none' : '';   // 요약일 때만 "전체 가져오기" 노출
+    // 전체 모드면 "요약 보기", 요약 모드면 "전체 가져오기"로 토글
+    if (fullBtn) {
+        fullBtn.style.display = '';
+        fullBtn.textContent = full ? '📑 요약 보기' : '📄 전체 가져오기';
+    }
     const [imgUrl, raw] = await Promise.all([fetchImage(title), fetchWikitext(title, full)]);
     if (imgUrl) detail.querySelector('.cp-img').innerHTML = `<img src="${imgUrl}" alt="${title}" />`;
     ta.value = cleanWikitext(raw, full) || '(설명을 찾지 못했어요. 검색으로 다른 제목을 시도해 보세요.)';
@@ -787,19 +799,29 @@ function wirePopup() {
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
             try {
-                if (cpPopup && typeof cpPopup.completeCancelled === 'function') cpPopup.completeCancelled();
-                else if (cpPopup && typeof cpPopup.complete === 'function') cpPopup.complete();
-                else if (cpPopup && typeof cpPopup.hide === 'function') cpPopup.hide();
-                else {
-                    // 폴백: SillyTavern 기본 닫기 버튼을 대신 누름
+                const { POPUP_RESULT } = SillyTavern.getContext();
+                if (cpPopup && typeof cpPopup.complete === 'function') {
+                    cpPopup.complete(POPUP_RESULT?.CANCELLED ?? 0);
+                } else if (cpPopup && typeof cpPopup.completeCancelled === 'function') {
+                    cpPopup.completeCancelled();
+                } else if (cpPopup && typeof cpPopup.hide === 'function') {
+                    cpPopup.hide();
+                } else {
+                    // 폴백: 팝업 컨테이너를 직접 닫기
+                    document.querySelector('.popup:has(#cp-root) .popup-button-close')?.click();
                     document.querySelector('.popup:has(#cp-root) .popup-button-ok')?.click();
                 }
-            } catch (e) { /* 무시 */ }
+            } catch (e) {
+                // 최후 폴백: ESC 키로 닫기 시도
+                document.querySelector('.popup:has(#cp-root)')?.dispatchEvent(
+                    new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+                );
+            }
         });
     }
-    // 상세에서 전체 가져오기 (3번): 같은 항목을 전체 모드로 다시 연다
+    // 전체/요약 토글: 현재가 요약이면 전체로, 전체면 요약으로 다시 연다
     document.getElementById('cp-load-full').addEventListener('click', () => {
-        if (currentDetailTitle) openDetail(currentDetailTitle, true);
+        if (currentDetailTitle) openDetail(currentDetailTitle, !currentDetailFull);
     });
     // 번역 프로필 드롭다운 채우기 (value = 프로필 ID)
     const profSelect = document.getElementById('cp-profile-select');
@@ -824,7 +846,7 @@ let cpPopup = null;
 async function openPopup() {
     loadSettings();
     const { Popup, POPUP_TYPE } = SillyTavern.getContext();
-    cpPopup = new Popup(popupHTML(), POPUP_TYPE.TEXT, '', { wide: true, large: true, okButton: '닫기' });
+    cpPopup = new Popup(popupHTML(), POPUP_TYPE.TEXT, '', { wide: true, large: true, okButton: false, allowVerticalScrolling: true });
     cpPopup.show();
     setTimeout(() => { wirePopup(); showWorldSelect(); }, 50);
 }
@@ -853,5 +875,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v0.17] loaded');
+    console.log('[Dalchive v0.18] loaded');
 });
