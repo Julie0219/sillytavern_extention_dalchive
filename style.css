@@ -1,0 +1,365 @@
+/* ============================================================
+   Dalchive — 모던 / 미니멀
+   ST 테마 변수에 적응하며 깔끔한 카드 UI. 산세리프, 절제된 액센트.
+   ============================================================ */
+
+:root {
+    --dal-accent: var(--SmartThemeQuoteColor, #6c8cff);
+    --dal-line: var(--SmartThemeBorderColor, rgba(128,128,128,0.25));
+    --dal-soft: color-mix(in srgb, var(--dal-accent) 12%, transparent);
+    --dal-radius: 10px;
+    --dal-font: var(--mainFontFamily, -apple-system, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif);
+}
+
+/* 팝업 창 */
+.popup:has(#cp-root) {
+    border-radius: 16px !important;
+    overflow: hidden;
+}
+
+#cp-root {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+    max-height: 72vh;
+    padding: 6px 4px;
+    font-family: var(--dal-font);
+}
+
+/* ---- 타이틀 ---- */
+.cp-title {
+    font-weight: 700;
+    font-size: 1.3em;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;   /* 텍스트 ↔ ✕ 양끝 */
+    gap: 8px;
+    padding: 2px 4px 10px;
+    border-bottom: 1px solid var(--dal-line);
+}
+.cp-title-text { display: flex; align-items: center; gap: 8px; }
+
+/* 우측 상단 ✕ 닫기 버튼 */
+.cp-close {
+    border: none;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font-size: 0.95rem;
+    line-height: 1;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.55;
+    flex-shrink: 0;
+    transition: opacity 0.15s ease, background 0.15s ease;
+}
+.cp-close:hover { opacity: 1; background: var(--dal-soft); }
+
+/* ---- 검색 ---- */
+.cp-search-row { display: flex; gap: 8px; align-items: stretch; }
+
+.cp-search-wrap {
+    position: relative;
+    flex: 1;
+    display: flex;
+}
+
+#cp-search {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 32px 9px 12px;
+    border-radius: var(--dal-radius);
+    border: 1px solid var(--dal-line);
+    background: var(--SmartThemeBlurTintColor, rgba(128,128,128,0.08));
+    color: inherit;
+    font-family: inherit;
+    font-size: 0.95em;
+    transition: border-color 0.15s ease;
+}
+#cp-search:focus {
+    outline: none;
+    border-color: var(--dal-accent);
+}
+
+/* 검색어 초기화(✕) 버튼 */
+.cp-search-clear {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px; height: 20px;
+    border: none;
+    border-radius: 50%;
+    background: var(--dal-line);
+    color: inherit;
+    cursor: pointer;
+    font-size: 0.75em;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    padding: 0;
+    transition: opacity 0.15s ease, background 0.15s ease;
+}
+.cp-search-clear:hover { opacity: 1; background: var(--dal-accent); color: #fff; }
+
+#cp-search-btn {
+    padding: 9px 16px !important;
+    border-radius: var(--dal-radius) !important;
+    font-size: 0.9em;
+}
+
+/* ---- 카테고리 칩 ---- */
+.cp-cats { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.cp-cat {
+    font-size: 0.85em !important;
+    padding: 6px 12px !important;
+    border-radius: 999px !important;       /* pill 형태 = 모던 */
+    border: 1px solid var(--dal-line) !important;
+    background: transparent !important;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+.cp-cat:hover { border-color: var(--dal-accent) !important; }
+
+.cp-cat.active {
+    background: var(--dal-accent) !important;
+    color: #fff !important;
+    border-color: var(--dal-accent) !important;
+    font-weight: 600;
+}
+
+.cp-full-label {
+    font-size: 0.85em;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#cp-status {
+    font-size: 0.82em;
+    opacity: 0.6;
+    min-height: 1em;
+}
+
+/* ---- 목록 ---- */
+#cp-list {
+    max-height: 248px;
+    overflow-y: auto;
+    border: 1px solid var(--dal-line);
+    border-radius: var(--dal-radius);
+}
+
+.cp-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 14px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--dal-line);
+    transition: background 0.12s ease, padding-left 0.12s ease;
+}
+.cp-item:last-child { border-bottom: none; }
+
+.cp-item:hover {
+    background: var(--dal-soft);
+    padding-left: 18px;
+}
+
+.cp-item-title { flex: 1; font-size: 0.96em; }
+
+.cp-meta { font-size: 0.72em; opacity: 0.45; }
+
+#cp-more-wrap { display: flex; justify-content: center; }
+
+/* ---- 상세 ---- */
+#cp-detail {
+    padding-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cp-detail-title {
+    font-weight: 700;
+    font-size: 1.2em;
+    letter-spacing: -0.01em;
+}
+
+.cp-img { display: flex; justify-content: center; }
+
+.cp-img img {
+    max-width: 100%;
+    max-height: 230px;
+    border-radius: var(--dal-radius);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+}
+
+.cp-text {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border-radius: var(--dal-radius);
+    border: 1px solid var(--dal-line);
+    background: var(--SmartThemeBlurTintColor, rgba(128,128,128,0.06));
+    color: inherit;
+    font-family: var(--dal-font);
+    font-size: 0.98em;
+    line-height: 1.65;
+    resize: vertical;
+    min-height: 130px;
+}
+
+/* 상세 하단 액션 */
+.cp-detail-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.cp-back {
+    align-self: flex-start;
+    font-size: 0.85em;
+    opacity: 0.8;
+    padding: 7px 14px !important;
+    margin-top: 4px;
+    border-radius: var(--dal-radius) !important;
+    background: transparent !important;
+    border: 1px solid var(--dal-line) !important;
+}
+.cp-back:hover { opacity: 1; }
+
+.cp-translate, .cp-load-full {
+    font-size: 0.85em;
+    padding: 7px 14px !important;
+    border-radius: var(--dal-radius) !important;
+    border: 1px solid var(--dal-accent) !important;
+    background: transparent !important;
+    color: var(--dal-accent) !important;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.cp-translate:hover, .cp-load-full:hover {
+    background: var(--dal-accent) !important;
+    color: #fff !important;
+}
+
+/* 위키에서 보기 링크 */
+.cp-wiki-link {
+    font-size: 0.85em;
+    color: var(--dal-accent);
+    text-decoration: none;
+    opacity: 0.85;
+    margin-left: auto;        /* 오른쪽 끝으로 */
+    transition: opacity 0.15s ease;
+}
+.cp-wiki-link:hover { opacity: 1; text-decoration: underline; }
+
+/* ---- 세계관 선택 ---- */
+.cp-prompt {
+    font-size: 1.05em;
+    margin: 16px 0 8px;
+    text-align: center;
+    opacity: 0.85;
+    font-weight: 500;
+}
+
+.cp-worlds {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 0;
+}
+
+.cp-worlds .cp-world {
+    font-size: 1.05em;
+    font-weight: 600;
+    padding: 13px 18px !important;
+    border-radius: var(--dal-radius) !important;
+    border: 1px solid var(--dal-line) !important;
+    background: var(--SmartThemeBlurTintColor, rgba(128,128,128,0.06)) !important;
+    color: inherit !important;
+    text-align: left;
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.cp-worlds .cp-world:hover {
+    border-color: var(--dal-accent) !important;
+    background: var(--dal-soft) !important;
+    transform: translateX(3px);
+}
+
+/* ---- 세계관 바 ---- */
+.cp-world-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--dal-line);
+}
+
+.cp-world-back {
+    font-size: 0.8em;
+    padding: 5px 10px !important;
+    border-radius: var(--dal-radius) !important;
+    opacity: 0.8;
+    background: transparent !important;
+    border: 1px solid var(--dal-line) !important;
+}
+.cp-world-back:hover { opacity: 1; }
+
+.cp-world-label {
+    font-weight: 700;
+    font-size: 1.02em;
+}
+
+/* ---- 번역 프로필 설정 ---- */
+.cp-profile-row {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--dal-line);
+    font-size: 0.85em;
+}
+
+.cp-profile-row label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    opacity: 0.9;
+}
+
+#cp-profile-select {
+    padding: 8px 10px;
+    border-radius: var(--dal-radius);
+    border: 1px solid var(--dal-line);
+    background: var(--SmartThemeBlurTintColor, rgba(128,128,128,0.08));
+    color: inherit;
+    font-family: inherit;
+}
+
+.cp-profile-hint {
+    opacity: 0.55;
+    font-size: 0.9em;
+    margin-top: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cp-item, .cp-cat, .cp-worlds .cp-world,
+    .cp-translate, .cp-load-full, .cp-wiki-link,
+    .cp-search-clear, #cp-search { transition: none; }
+    .cp-worlds .cp-world:hover { transform: none; }
+    .cp-item:hover { padding-left: 14px; }
+}
+
+/* 기본 닫기 버튼 영역 숨김 (우리는 우측 상단 ✕로 닫음) */
+.popup:has(#cp-root) .popup-controls {
+    display: none !important;
+}
