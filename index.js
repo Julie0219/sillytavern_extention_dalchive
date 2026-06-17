@@ -54,7 +54,7 @@ const WORLDS = {
                 'Percy Weasley', 'Charlie Weasley', 'Fleur Delacour', 'Viktor Krum', 'Cornelius Fudge',
                 'Kingsley Shacklebolt', 'Peter Pettigrew', 'Filius Flitwick', 'Pomona Sprout', 'Sybill Trelawney',
                 'Argus Filch', 'Gilderoy Lockhart', 'Quirinus Quirrell', 'Bartemius Crouch Junior', 'Regulus Black',
-                'Nagini', 'Aberforth Dumbledore', 'Garrick Ollivander',
+                'Nagini', 'Aberforth Dumbledore', 'Garrick Ollivander', 'Marauders',
             ],
             '🪄 Spells (주문)': [
                 'Disarming Charm', 'Patronus Charm', 'Killing Curse', 'Levitation Charm', 'Wand-Lighting Charm',
@@ -105,54 +105,112 @@ const WORLDS = {
                 'Number 12, Grimmauld Place', "King's Cross Station", 'Beauxbatons Academy of Magic',
                 'Durmstrang Institute', 'Nurmengard', 'Little Hangleton', 'Ottery St Catchpole', 'Black Lake',
             ],
+            '⚔️ Events (주요 사건)': [
+                'Battle of Hogwarts', 'First Wizarding War', 'Second Wizarding War',
+                'Triwizard Tournament', 'Opening of the Chamber of Secrets',
+                'Battle of the Department of Mysteries', 'Battle of the Astronomy Tower',
+                'Skirmish at the Lovegood House', 'Attack on the Burrow',
+                'Battle of the Seven Potters', 'Quidditch World Cup', "Dumbledore's Army",
+                "Marauder's Map", 'Life debt', "Sirius Black's will",
+                "Fred and George Weasley's departure from Hogwarts",
+            ],
+            "🎬 Film Plots (영화별 플롯)": [
+                "Harry Potter and the Philosopher's Stone (film)",
+                'Harry Potter and the Chamber of Secrets (film)',
+                'Harry Potter and the Prisoner of Azkaban (film)',
+                'Harry Potter and the Goblet of Fire (film)',
+                'Harry Potter and the Order of the Phoenix (film)',
+                'Harry Potter and the Half-Blood Prince (film)',
+                'Harry Potter and the Deathly Hallows: Part 1',
+                'Harry Potter and the Deathly Hallows: Part 2',
+            ],
         },
     },
 
     marvel: {
-        name: 'Marvel Universe',
+        name: 'Marvel (MCU)',
         emoji: '🦸',
-        api: 'https://marvel.fandom.com/api.php',
+        api: 'https://marvelcinematicuniverse.fandom.com/api.php',
         categories: {
             '🦸 Heroes (히어로)': [
-                'Peter Parker (Earth-616)', 'Tony Stark (Earth-616)', 'Steve Rogers (Earth-616)',
-                'Thor Odinson (Earth-616)', 'Bruce Banner (Earth-616)', 'Natasha Romanoff (Earth-616)',
-                'Clint Barton (Earth-616)', 'Stephen Strange (Earth-616)', "T'Challa (Earth-616)",
-                'Carol Danvers (Earth-616)', 'Scott Summers (Earth-616)', 'James Howlett (Earth-616)',
-                'Wade Wilson (Earth-616)', 'Matthew Murdock (Earth-616)', 'Frank Castle (Earth-616)',
-                'Reed Richards (Earth-616)', 'Susan Storm (Earth-616)', 'Benjamin Grimm (Earth-616)',
-                'Johnny Storm (Earth-616)', 'Jean Grey (Earth-616)', 'Ororo Munroe (Earth-616)',
-                'Charles Xavier (Earth-616)', 'Hank McCoy (Earth-616)', 'Peter Quill (Earth-616)',
-                'Sam Wilson (Earth-616)', 'Bucky Barnes (Earth-616)', 'Wanda Maximoff (Earth-616)',
-                'Pietro Maximoff (Earth-616)', 'Vision (Earth-616)', 'Marc Spector (Earth-616)',
+                'Tony Stark', 'Steve Rogers', 'Thor', 'Bruce Banner',
+                'Natasha Romanoff', 'Clint Barton', 'Stephen Strange', 'T\'Challa',
+                'Carol Danvers', 'Peter Parker', 'Scott Lang', 'Sam Wilson',
+                'Bucky Barnes', 'Wanda Maximoff', 'Vision', 'James Rhodes',
+                'Peter Quill', 'Gamora', 'Rocket Raccoon', 'Groot',
+                'Drax', 'Nebula', 'Mantis', 'Shang-Chi',
+                'Marc Spector', 'Matt Murdock', 'Nick Fury', 'Loki',
+                'Wolverine', 'Cyclops', 'Venom',
             ],
             '🦹 Villains (빌런)': [
-                'Thanos (Earth-616)', 'Victor von Doom (Earth-616)', 'Norman Osborn (Earth-616)',
-                'Loki Laufeyson (Earth-616)', 'Max Eisenhardt (Earth-616)', 'Wilson Fisk (Earth-616)',
-                'Eddie Brock (Earth-616)', 'Otto Octavius (Earth-616)', 'Ultron (Earth-616)',
-                'Red Skull (Earth-616)', 'En Sabah Nur (Earth-616)', 'Galactus (Earth-616)',
-                'Kang (Earth-616)', 'Carnage (Earth-616)', 'Green Goblin', 'Mysterio',
-                'Vulture (Earth-616)', 'Sandman (Earth-616)', 'Kraven the Hunter', 'Sabretooth (Earth-616)',
+                'Thanos', 'Loki', 'Ultron', 'Helmut Zemo', 'Wenwu',
+                'Hela', 'Killmonger', 'Thunderbolt Ross', 'Red Skull',
+                'Ego', 'Kang the Conqueror', 'Quentin Beck', 'Adrian Toomes',
+                'Wilson Fisk', 'Kingo', 'Agatha Harkness', 'Mysterio',
+                'Green Goblin', 'Doctor Octopus',
             ],
             '👥 Teams (팀·조직)': [
-                'Avengers (Earth-616)', 'X-Men (Earth-616)', 'Fantastic Four (Earth-616)',
-                'Guardians of the Galaxy (Earth-616)', 'S.H.I.E.L.D. (Earth-616)', 'Hydra (Earth-616)',
-                'Defenders (Earth-616)', 'Inhumans (Earth-616)', 'Brotherhood of Evil Mutants (Earth-616)',
-                'Sinister Six (Earth-616)', 'Thunderbolts (Earth-616)', 'Nova Corps (Earth-616)',
+                'Avengers', 'Guardians of the Galaxy', 'S.H.I.E.L.D.', 'HYDRA',
+                'Wakandan Royal Family', 'Masters of the Mystic Arts',
+                'Ten Rings (Organization)', 'Nova Corps', 'Ravagers',
+                'Sokovia Accords', 'Strategic Scientific Reserve',
             ],
             '💎 Items (아이템·유물)': [
-                'Infinity Gems', 'Mjolnir', "Captain America's Shield", 'Iron Man Armor',
-                'Cosmic Cube', 'Eye of Agamotto', 'Web-Shooters', 'Adamantium', 'Vibranium',
-                'Infinity Gauntlet',
+                'Infinity Stones', 'Space Stone', 'Mind Stone', 'Reality Stone',
+                'Power Stone', 'Time Stone', 'Soul Stone',
+                'Infinity Gauntlet', 'Mjolnir', 'Stormbreaker',
+                'Captain America\'s Shield', 'Eye of Agamotto', 'Tesseract',
             ],
             '👽 Races (종족)': [
-                'Mutants (Homo superior)', 'Asgardians', 'Inhumans (Inhomo supremis)', 'Deviant Skrulls', 'Kree', 'Eternals (Earth-616)',
-                'Celestials', 'Symbiotes', 'Atlanteans', 'Watchers',
+                'Asgardians', 'Eternals', 'Celestials', 'Kree', 'Skrulls',
+                'Chitauri', 'Frost Giants', 'Symbiotes', 'Flora colossus',
             ],
             '🌆 Locations (장소)': [
-                'Wakanda', 'Asgard', 'Latveria', 'Genosha', 'Sokovia', 'Knowhere',
-                'Sanctum Sanctorum', 'Avengers Tower', "Xavier's School for Gifted Youngsters",
-                'Baxter Building', "Hell's Kitchen", 'Madripoor',
+                'Wakanda', 'Asgard', 'Sokovia', 'Knowhere', 'Sakaar',
+                'Sanctum Sanctorum', 'Avengers Compound', 'Stark Tower',
+                'New York City', 'Titan', 'Vormir', 'Kamar-Taj', 'Quantum Realm', 'Triskelion',
             ],
+            '⚔️ Events (주요 사건)': [
+                'Battle of New York', 'Battle of Sokovia', 'Avengers Civil War',
+                'Snap', 'Blip', 'Battle of Earth', 'Battle of Wakanda',
+                'Battle of Titan', 'War on Hydra', 'Battle at the Triskelion',
+                'Sokovia Accords', 'Time Heist',
+            ],
+            '🎬 Film Plots (작품별 플롯)': {
+                '🎬 Phase One': [
+                    'Iron Man (film)', 'The Incredible Hulk', 'Iron Man 2',
+                    'Thor (film)', 'Captain America: The First Avenger', 'The Avengers',
+                ],
+                '🎬 Phase Two': [
+                    'Iron Man 3', 'Thor: The Dark World', 'Captain America: The Winter Soldier',
+                    'Guardians of the Galaxy (film)', 'Avengers: Age of Ultron', 'Ant-Man (film)',
+                ],
+                '🎬 Phase Three': [
+                    'Captain America: Civil War', 'Doctor Strange (film)',
+                    'Guardians of the Galaxy Vol. 2', 'Spider-Man: Homecoming',
+                    'Thor: Ragnarok', 'Black Panther (film)', 'Avengers: Infinity War',
+                    'Ant-Man and the Wasp', 'Captain Marvel (film)', 'Avengers: Endgame',
+                    'Spider-Man: Far From Home',
+                ],
+                '🎬 Phase Four': [
+                    'Black Widow (film)', 'Shang-Chi and the Legend of the Ten Rings',
+                    'Eternals (film)', 'Spider-Man: No Way Home',
+                    'Doctor Strange in the Multiverse of Madness', 'Thor: Love and Thunder',
+                    'Black Panther: Wakanda Forever',
+                ],
+                '🎬 Phase Five': [
+                    'Ant-Man and the Wasp: Quantumania', 'Guardians of the Galaxy Vol. 3',
+                    'The Marvels', 'Deadpool & Wolverine', 'Captain America: Brave New World',
+                    'Thunderbolts',
+                ],
+                '🎬 Phase Six': [
+                    'The Fantastic Four: First Steps', 'Avengers: Doomsday',
+                    'Spider-Man: Brand New Day', 'Avengers: Secret Wars',
+                ],
+                '🎬 X-Men · 기타': [
+                    'The Wolverine',
+                ],
+            },
         },
     },
 
@@ -195,6 +253,34 @@ const WORLDS = {
                 'United Republic of Adal', 'Kastovia', 'Vondel',
                 'Rebirth Island', 'Caldera',
             ],
+            '🎮 Campaign Plots (캠페인 플롯)': {
+                '🎯 Modern Warfare (2019)': [
+                    'Fog of War (level)', 'Piccadilly (level)', 'Embedded', 'Proxy War',
+                    'Clean House', 'Hunting Party', 'The Embassy', 'Highway of Death',
+                    'Hometown', 'The Wolf\'s Den (level)', 'Captive', 'Old Comrades',
+                    'Going Dark', 'Into the Furnace',
+                ],
+                '🎯 Modern Warfare II (2022)': [
+                    'Strike (level)', 'Kill or Capture', 'Wetwork (level)', 'Tradecraft',
+                    'Borderline', 'Cartel Protection', 'Close Air', 'Hardpoint (level)',
+                    'Recon by Fire', 'Violence and Timing', 'El Sin Nombre (level)',
+                    'Dark Water', 'Alone (level)', 'Prison Break (Modern Warfare II)',
+                    'Hindsight', 'Ghost Team', 'Countdown (Modern Warfare II)',
+                ],
+                '🎯 Modern Warfare III (2023)': [
+                    'Operation 627', 'Precious Cargo', 'Reactor', 'Payload (level)',
+                    'Deep Cover', 'Passenger', 'Crash Site (Modern Warfare III)',
+                    'Flashpoint', 'Oligarch', 'Highrise (level)', 'Frozen Tundra',
+                    'Gora Dam', 'Danger Close (level)', 'Trojan Horse',
+                ],
+                '👻 Ghosts': [
+                    'Ghost Stories', 'Brave New World', 'No Man\'s Land (Ghosts)',
+                    'Struck Down', 'Homecoming (Ghosts)', 'Legends Never Die',
+                    'Federation Day', 'Birds of Prey (Ghosts)', 'The Hunted', 'Clockwork',
+                    'Atlas Falls', 'Into the Deep', 'End of the Line (Ghosts)', 'Sin City',
+                    'All or Nothing (Ghosts)', 'Severed Ties', 'Loki', 'The Ghost Killer',
+                ],
+            },
         },
     },
     residentevil: {
@@ -227,7 +313,20 @@ const WORLDS = {
             ],
             '🗺️ Locations (장소)': [
                 'Raccoon City', 'Spencer Mansion', 'Arklay Mountains',
-                'Tall Oaks', 'Terragrigia', 'Baker Estate', 'Rockfort Island',
+                'Tall Oaks', 'Tall Oaks Church', 'Terragrigia', 'Baker Estate', 'Rockfort Island',
+            ],
+            '⚔️ Events (주요 사건)': [
+                'Raccoon City Destruction Incident', 'Mansion Incident',
+                'Kijuju Autonomous Zone Incident', 'Terragrigia Panic', 'Lanshiang outbreak',
+                'Harvardville Airport incident',
+                'Raid on the Spencer Estate', 'Rockfort Island Incident',
+                'Sheena Island Incident', 'Sushestvovanie Island incident',
+            ],
+            '🎮 Game Plots (게임별 플롯)': [
+                'Resident Evil', 'Resident Evil 2', 'Resident Evil 3: Nemesis',
+                'Resident Evil CODE:Veronica', 'Resident Evil 4 (2023 game)/plot',
+                'Resident Evil 5', 'Resident Evil 6', 'Resident Evil 7: Biohazard',
+                'Resident Evil Village',
             ],
         },
     },
@@ -276,6 +375,8 @@ function mergeRemoteData(remote) {
                 if (!Array.isArray(list)) continue;
                 if (!WORLDS[worldId].categories[cat]) WORLDS[worldId].categories[cat] = [];
                 const existing = WORLDS[worldId].categories[cat];
+                // 트리(객체) 카테고리엔 원격 추가를 건너뜀 (배열만 지원)
+                if (!Array.isArray(existing)) continue;
                 for (const item of list) {
                     if (typeof item === 'string' && !existing.includes(item)) existing.push(item);
                 }
@@ -331,14 +432,76 @@ function encodeTitle(title) {
     return title.split('/').map(encodeURIComponent).join('/');
 }
 
+// 위키텍스트에서 특정 섹션(헤딩 매칭)의 본문을 잘라냄. 헤딩 포함해서 반환.
+function extractSection(wikitext, matchFn) {
+    // == Heading == 또는 === Heading === 등 모든 레벨. 다음 같은/상위 레벨 헤딩 전까지.
+    const headingRe = /^(={2,6})\s*([^=\n][^=\n]*?)\s*\1\s*$/gm;
+    const heads = [];
+    let m;
+    while ((m = headingRe.exec(wikitext)) !== null) {
+        heads.push({ level: m[1].length, name: m[2].replace(/<[^>]+>/g, '').trim(), start: m.index, after: headingRe.lastIndex });
+    }
+    for (let i = 0; i < heads.length; i++) {
+        if (matchFn(heads[i].name.toLowerCase())) {
+            // 다음 헤딩(레벨 무관)까지를 섹션 본문으로 — 단 하위 헤딩은 포함
+            const myLevel = heads[i].level;
+            let end = wikitext.length;
+            for (let j = i + 1; j < heads.length; j++) {
+                if (heads[j].level <= myLevel) { end = heads[j].start; break; }
+            }
+            return wikitext.slice(heads[i].start, end);
+        }
+    }
+    return null;
+}
+
 async function fetchWikitext(title, fullArticle, depth = 0) {
-    let p = `action=parse&page=${encodeTitle(title)}&prop=wikitext`;
-    if (!fullArticle) p += '&section=0';
-    const data = await apiGet(p);
-    const raw = data?.parse?.wikitext?.['*'] ?? '';
+    // --- 전체 문서를 한 번에 받아온다 (섹션/플롯 추출은 로컬에서 처리) ---
+    let raw = '';
+    try {
+        const data = await apiGet(`action=parse&page=${encodeTitle(title)}&prop=wikitext`);
+        raw = data?.parse?.wikitext?.['*'] ?? '';
+    } catch (e) { raw = ''; }
+    // 리다이렉트 따라가기
     const rd = raw.match(/^#REDIRECT\s*\[\[([^\]|#]+)/i) || raw.match(/^#REDIRECT\s+(.+)$/im);
     if (rd && depth < 2) return fetchWikitext(rd[1].trim(), fullArticle, depth + 1);
-    return raw;
+
+    if (fullArticle) return raw;  // 전체 가져오기: 그대로
+
+    // 제목 자체가 "/plot" 하위문서면 문서 전체가 줄거리 → 통째로 정리
+    if (/\/plot$/i.test(title)) {
+        return raw ? '\u0001PLOTSUB\u0001' + raw : '';
+    }
+
+    // --- 요약 보기 ---
+    // 0) "제목/plot" 하위문서가 있으면 그게 가장 상세한 줄거리 (RE 위키 등)
+    if (depth === 0) {
+        try {
+            const sub = await apiGet(`action=parse&page=${encodeTitle(title + '/plot')}&prop=wikitext`);
+            const subRaw = sub?.parse?.wikitext?.['*'] ?? '';
+            if (subRaw && subRaw.trim().length > 80 && !/^#REDIRECT/i.test(subRaw.trim())) {
+                return '\u0001PLOTSUB\u0001' + subRaw;
+            }
+        } catch (e) { /* 없음 → 진행 */ }
+    }
+    if (!raw) return '';
+
+    // 1) Plot 섹션을 로컬에서 추출 (Plot 최우선 → Synopsis/Story → Summary)
+    let section = extractSection(raw, n => n === 'plot')
+        || extractSection(raw, n => n.includes('plot'))
+        || extractSection(raw, n => n === 'synopsis' || n === 'story')
+        || extractSection(raw, n => n === 'summary')
+        || extractSection(raw, n => n.includes('synopsis'));
+    if (section && section.trim()) return '\n' + section;
+
+    // 2) Plot류 섹션이 없음 → 도입부(첫 헤딩 전)만 추출
+    const lead = raw.split(/^={2,6}\s*[^=\n]/m)[0];
+    const leadProse = stripMarkup(lead).trim();
+    // 도입부가 짧은 stub면(COD 미션처럼 줄거리가 본문에 흩어짐) 문서 전체를 정리
+    if (leadProse.length < 320) {
+        return '\u0001PLOTSUB\u0001' + raw;
+    }
+    return lead;
 }
 
 async function fetchImage(title) {
@@ -380,6 +543,11 @@ function stripMarkup(text) {
     text = text.replace(/\{\{r\|[^}]*\}\}/gi, '');       // 마블 참조 {{r|...}}
     text = text.replace(/\{\{cl\|[^}]*\}\}/gi, '');      // 마블 참조 {{cl|...}}
     text = text.replace(/\{\{citation\}\}/gi, '');
+    // 카테고리 / 인터위키 링크 제거 (본문 노출 방지)
+    text = text.replace(/\[\[Category:[^\]]*\]\]/gi, '');
+    text = text.replace(/\[\[[a-z]{2}(?:-[a-z]+)?:[^\]]*\]\]/g, '');  // [[pt-br:..]] [[zh:..]] 등
+    // 줄 단독 인터위키 (알려진 언어코드만 — 본문 오제거 방지)
+    text = text.replace(/^(?:ar|bg|ca|cs|da|de|el|en|es|fa|fi|fr|he|hu|id|it|ja|ko|nl|no|pl|pt|pt-br|ro|ru|sv|th|tr|uk|vi|zh|zh-tw)\s*:[^\n]*$/gim, '');
     // 이미지: [[File:...]] / [[Image:...]] 통째 제거 — 균형 카운팅으로 중첩 무제한 대응
     text = removeFileLinks(text);
     text = text.replace(/^\s*thumb\s*\|[^\n]*$/gim, '');
@@ -402,6 +570,10 @@ function stripMarkup(text) {
     text = text.replace(/={2,}\s*([^=\n]+?)\s*={2,}/g, '\n$1: ');  // ==제목==
     text = text.replace(/\[\[[^\]|]*\|([^\]]*)\]\]/g, '$1');
     text = text.replace(/\[\[([^\]]*)\]\]/g, '$1');
+    // 외부 링크: [http://... 표시텍스트] -> 표시텍스트만 (URL 노출 방지)
+    text = text.replace(/\[(?:https?:|\/\/)\S+\s+([^\]]+)\]/gi, '$1');
+    // 표시텍스트 없는 외부 링크 [http://...] -> 통째 제거
+    text = text.replace(/\[(?:https?:|\/\/)\S+\]/gi, '');
     text = text.replace(/'''(.*?)'''/g, '$1');
     text = text.replace(/''(.*?)''/g, '$1');
     text = text.replace(/^\s*\*\s*$/gm, '');
@@ -417,7 +589,10 @@ function removeAppendices(wikitext) {
         // COD 등 게임 위키에서 RP에 불필요한 섹션
         'Personalization', 'Skins', 'Quips', 'Quotes', 'Transcript', 'Voice quotes', 'Voicelines',
         'Variants', 'Achievements', 'Trophies', 'Videos', 'Audio', 'Charms', 'Camouflages', 'Attachments',
-        'Weapon levels', 'Multiplayer', 'Trivia and references'];
+        'Weapon levels', 'Multiplayer', 'Trivia and references',
+        // COD 레벨 문서: 줄거리 외 게임플레이 섹션
+        'Walkthrough', 'Weapons', 'Loadout', 'Loadouts', 'Starting Loadout', 'Intel',
+        'Objectives', 'Enemies', 'Featured Weapons', 'Weapons and Equipment', 'Characters'];
     for (const h of cutHeadings) {
         t = t.replace(new RegExp(`\\n=+\\s*${h}\\s*=+[\\s\\S]*$`, 'i'), '');
     }
@@ -433,12 +608,26 @@ function removeAppendices(wikitext) {
 
 function cleanWikitext(wikitext, fullArticle) {
     if (!wikitext) return '';
+    // /plot 하위문서 마커: 문서 전체가 줄거리이므로 섹션 추출 없이 통째로 정리
+    if (wikitext.startsWith('\u0001PLOTSUB\u0001')) {
+        const body = wikitext.slice('\u0001PLOTSUB\u0001'.length);
+        const cleaned = stripMarkup(removeAppendices(body)).trim();
+        if (cleaned.replace(/[\s:·]/g, '').length < 15) {
+            return '(이 항목은 위키에 표/틀 위주로 되어 있어 설명 추출이 어려워요. 검색으로 다른 문서를 시도해 보세요.)';
+        }
+        return cleaned;
+    }
     // 동음이의(Disambiguation) 안내 페이지: 실제 설명이 없으므로 안내만
     if (/\{\{\s*Disambig(uation)?/i.test(wikitext) || /may refer to:/i.test(wikitext.slice(0, 200))) {
         return '(이 항목은 여러 대상을 가리키는 안내 페이지예요. 검색창에 더 구체적인 이름을 넣어보세요.)';
     }
-    // 마블: 모든 내용이 거대 틀 안에 있음 -> 필드 추출 방식
-    let result = (currentWorld === 'marvel') ? cleanMarvel(wikitext, fullArticle) : cleanGeneric(wikitext);
+    // 마블: 캐릭터/종족 등은 거대 틀(Marvel Database) 안에 내용이 있음 -> 필드 추출.
+    // 마블(MCU 위키)은 {{Character}}/{{Movie}} 등 일반 인포박스+산문 구조라 cleanGeneric으로 처리.
+    // (구 코믹스 위키의 {{Marvel Database:}} 거대 틀이 있으면 cleanMarvel로 분기 — 하위호환용)
+    const isMarvelTemplate = /\{\{Marvel Database:/i.test(wikitext);
+    let result = (currentWorld === 'marvel' && isMarvelTemplate)
+        ? cleanMarvel(wikitext, fullArticle)
+        : cleanGeneric(wikitext, fullArticle);
     // 청소 후 내용이 거의 없으면(본문이 통째로 틀/표였던 경우) 안내
     if (result.replace(/[\s:·]/g, '').length < 15) {
         return '(이 항목은 위키에 표/틀 위주로 되어 있어 설명 추출이 어려워요. 검색으로 다른 문서를 시도해 보세요.)';
@@ -503,7 +692,29 @@ function cleanMarvel(wikitext, fullArticle) {
     return out.trim() || stripMarkup(wikitext).slice(0, fullArticle ? 100000 : 800);
 }
 
-function cleanGeneric(wikitext) {
+function cleanGeneric(wikitext, fullArticle) {
+    // 미션/사건/영화 문서: Plot 섹션을 최우선으로, 없으면 Synopsis/Summary/Story/Overview 순.
+    // (영화 문서는 Synopsis(짧은 소개)와 Plot(실제 줄거리)이 둘 다 있는 경우가 많아,
+    //  Plot을 먼저 잡아야 진짜 줄거리가 나옴)
+    let plotMatch = wikitext.match(/\n==+\s*Plot\s*==+\s*([\s\S]*?)(?=\n==[^=]|$)/i)
+        || wikitext.match(/\n==+\s*(?:Synopsis|Summary|Story|Overview)\s*==+\s*([\s\S]*?)(?=\n==[^=]|$)/i);
+    if (plotMatch) {
+        const plot = stripMarkup(plotMatch[1]).trim();
+        // 요약 모드: Plot(줄거리)만 보여줌 (감독·개봉일 등 도입부 메타정보는 전체보기에서)
+        if (!fullArticle && plot) {
+            return plot;
+        }
+        // 전체 모드: 도입부 + Plot
+        let intro = wikitext.split(/\n==[^=]/)[0];
+        intro = intro.replace(/\{\{[^\n]*infobox[\s\S]*?\n\}\}/gi, '');
+        intro = intro.replace(/\{\{(?:For|Quote|About|Main|See also|Redirect|game)\b[^{}]*(?:\{\{[^{}]*\}\}[^{}]*)*\}\}/gi, '');
+        let ip;
+        do { ip = intro; intro = intro.replace(/\{\{[^{}]*\}\}/g, ''); } while (intro !== ip);
+        intro = stripMarkup(intro).trim();
+        let combined = (intro && plot) ? (intro + '\n\n' + plot) : (plot || intro);
+        return combined.trim();
+    }
+
     const infoboxFields = [];
     const infoboxMatch = wikitext.match(/\{\{[^\n]*infobox([\s\S]*?)\n\}\}/i);
     if (infoboxMatch) {
@@ -516,6 +727,24 @@ function cleanGeneric(wikitext) {
             if (fm && wanted.includes(fm[1].toLowerCase())) {
                 const val = stripMarkup(fm[2]);
                 if (val) infoboxFields.push(`${fm[1]}: ${val}`);
+            }
+        }
+    }
+    // MCU 위키 인포박스({{Character / {{Movie 등, 'infobox' 단어 없음)에서 핵심 필드만 발췌
+    if (!infoboxFields.length) {
+        const mcuLabels = {
+            'real name': 'Real name', 'species': 'Species', 'gender': 'Gender',
+            'status': 'Status', 'title': 'Title', 'affiliation': 'Affiliation',
+            'director': 'Director', 'release': 'Release', 'runtime': 'Runtime',
+        };
+        for (const [field, label] of Object.entries(mcuLabels)) {
+            // 줄 시작 | field = 값 ... 다음 | 또는 }} 전까지
+            const re = new RegExp(`\\n\\|\\s*${field}\\s*=\\s*([^\\n]*)`, 'i');
+            const m = wikitext.match(re);
+            if (m) {
+                let v = stripMarkup(m[1]).replace(/\}+\s*$/,'').replace(/\s*\(formerly\)\s*/gi, ' ').trim();
+                // 너무 길거나(목록형) 비면 건너뜀
+                if (v && v.length <= 80 && !v.includes('*')) infoboxFields.push(`${label}: ${v}`);
             }
         }
     }
@@ -668,6 +897,18 @@ function showListView() {
 let currentDetailTitle = '';   // 현재 보고 있는 항목의 원래 제목 (전체 가져오기·번역용)
 let currentDetailFull = false; // 현재 상세가 전체 모드인지 (요약 토글용)
 
+// 표시용 제목: "/plot" 하위문서나 "(2023 game)" 같은 디스앰비 꼬리표를 떼어 깔끔하게
+function displayTitle(title) {
+    return title
+        .replace(/\/plot$/i, '')
+        .replace(/\s*\((?:\d{4}\s*)?(?:game|film|level|video game|\d{4}\s*game)\)\s*$/i, '')
+        .replace(/\s*\(Modern Warfare[^)]*\)\s*$/i, '')
+        .replace(/\s*\(Ghosts\)\s*$/i, '')
+        .replace(/\s*\(Event\)\s*$/i, '')
+        .replace(/\s*\(level\)\s*$/i, '')
+        .trim();
+}
+
 async function openDetail(title, forceFull) {
     currentDetailTitle = title;
     const full = (forceFull !== undefined) ? forceFull : !!document.getElementById('cp-full')?.checked;
@@ -679,7 +920,7 @@ async function openDetail(title, forceFull) {
     // 제목 표시 (override에 한글 이름 있으면 "원문 (한글)" 병기)
     const ov = OVERRIDES[title];
     const titleEl = detail.querySelector('.cp-detail-title');
-    titleEl.textContent = (ov && ov.title_ko) ? `${title} (${ov.title_ko})` : title;
+    titleEl.textContent = (ov && ov.title_ko) ? `${displayTitle(title)} (${ov.title_ko})` : displayTitle(title);
 
     detail.querySelector('.cp-img').innerHTML = '';
     // 번역 상태 초기화
@@ -730,11 +971,43 @@ function wikiPageUrl(title) {
 
 function renderList(items) {
     const list = document.getElementById('cp-list');
-    list.innerHTML = items.map(it =>
-        `<div class="cp-item" data-title="${encodeURIComponent(it.title)}">
-            <span class="cp-item-title">${it.title}</span>
+    list.innerHTML = items.map(it => {
+        if (it.group) {
+            // 드릴다운(시리즈) 항목 — 클릭하면 하위 미션 목록으로
+            return `<div class="cp-item cp-group" data-group="${encodeURIComponent(it.title)}">
+                <span class="cp-item-title">${it.title}</span>
+                <span class="cp-meta">${it.count}개 ›</span>
+            </div>`;
+        }
+        return `<div class="cp-item" data-title="${encodeURIComponent(it.title)}">
+            <span class="cp-item-title">${displayTitle(it.title)}</span>
             ${it.wordcount ? `<span class="cp-meta">${it.wordcount}w</span>` : ''}
-        </div>`).join('');
+        </div>`;
+    }).join('');
+}
+
+// 2단계 트리용: 시리즈(그룹) 목록 렌더 + 뒤로 상태
+let currentGroupBack = null;  // { label, groups } — 미션 목록에서 시리즈 목록으로 돌아가기 위함
+
+function renderGroupList(label, groupsObj) {
+    currentGroupBack = { label, groupsObj };
+    const items = Object.entries(groupsObj).map(([name, arr]) => ({
+        group: true, title: name, count: arr.length,
+    }));
+    document.getElementById('cp-status').textContent = `${label} — 시리즈를 선택하세요`;
+    renderList(items);
+}
+
+function renderMissionList(label, seriesName, missions) {
+    const items = missions.map(t => ({ title: t }));
+    document.getElementById('cp-status').innerHTML =
+        `<button class="cp-series-back menu_button" type="button">‹ 시리즈 목록</button> ${seriesName} — ${items.length}개`;
+    renderList(items);
+    const back = document.querySelector('.cp-series-back');
+    if (back && currentGroupBack) {
+        back.addEventListener('click', () =>
+            renderGroupList(currentGroupBack.label, currentGroupBack.groupsObj));
+    }
 }
 
 // 세계관을 골랐을 때: 카테고리 버튼을 그 세계관 것으로 다시 그림
@@ -751,9 +1024,16 @@ function enterWorld(worldId) {
             const label = decodeURIComponent(btn.dataset.label);
             cats.querySelectorAll('.cp-cat').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            const items = w.categories[label].map(t => ({ title: t }));
-            document.getElementById('cp-status').textContent = `${label} — ${items.length}개`;
-            renderList(items);
+            const val = w.categories[label];
+            // 카테고리 값이 객체면 2단계 트리(시리즈 → 미션), 배열이면 평면 목록
+            if (val && !Array.isArray(val) && typeof val === 'object') {
+                renderGroupList(label, val);
+            } else {
+                currentGroupBack = null;
+                const items = val.map(t => ({ title: t }));
+                document.getElementById('cp-status').textContent = `${label} — ${items.length}개`;
+                renderList(items);
+            }
         });
     });
     document.getElementById('cp-status').textContent = '카테고리를 누르거나 검색해 보세요.';
@@ -867,8 +1147,15 @@ function wirePopup() {
 
     // 항목 클릭
     document.getElementById('cp-list').addEventListener('click', e => {
+        const group = e.target.closest('.cp-group');
+        if (group && currentGroupBack) {
+            const name = decodeURIComponent(group.dataset.group);
+            const missions = currentGroupBack.groupsObj[name] || [];
+            renderMissionList(currentGroupBack.label, name, missions);
+            return;
+        }
         const item = e.target.closest('.cp-item');
-        if (item) openDetail(decodeURIComponent(item.dataset.title));
+        if (item && item.dataset.title) openDetail(decodeURIComponent(item.dataset.title));
     });
 
     // 뒤로가기들
@@ -956,5 +1243,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v1.0] loaded');
+    console.log('[Dalchive v2.0] loaded');
 });
