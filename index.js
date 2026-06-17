@@ -494,14 +494,10 @@ async function fetchWikitext(title, fullArticle, depth = 0) {
         || extractSection(raw, n => n.includes('synopsis'));
     if (section && section.trim()) return '\n' + section;
 
-    // 2) Plot류 섹션이 없음 → 도입부(첫 헤딩 전)만 추출
-    const lead = raw.split(/^={2,6}\s*[^=\n]/m)[0];
-    const leadProse = stripMarkup(lead).trim();
-    // 도입부가 짧은 stub면(COD 미션처럼 줄거리가 본문에 흩어짐) 문서 전체를 정리
-    if (leadProse.length < 320) {
-        return '\u0001PLOTSUB\u0001' + raw;
-    }
-    return lead;
+    // 2) Plot류 섹션이 없음 → 문서 전체를 cleanGeneric에 넘김.
+    //    cleanGeneric이 인포박스 필드(주문/마법약 등)와 본문을 정상 추출함.
+    //    (PLOTSUB로 보내면 인포박스가 통째로 날아가 '표/틀 위주' 오류가 남 — 그래서 raw 그대로)
+    return raw;
 }
 
 async function fetchImage(title) {
@@ -618,7 +614,7 @@ function cleanWikitext(wikitext, fullArticle) {
         return cleaned;
     }
     // 동음이의(Disambiguation) 안내 페이지: 실제 설명이 없으므로 안내만
-    if (/\{\{\s*Disambig(uation)?/i.test(wikitext) || /may refer to:/i.test(wikitext.slice(0, 200))) {
+    if (/\{\{\s*Disambig/i.test(wikitext) || /\b(?:may|can)\s+refer to:/i.test(wikitext.slice(0, 300))) {
         return '(이 항목은 여러 대상을 가리키는 안내 페이지예요. 검색창에 더 구체적인 이름을 넣어보세요.)';
     }
     // 마블: 캐릭터/종족 등은 거대 틀(Marvel Database) 안에 내용이 있음 -> 필드 추출.
@@ -692,6 +688,98 @@ function cleanMarvel(wikitext, fullArticle) {
     return out.trim() || stripMarkup(wikitext).slice(0, fullArticle ? 100000 : 800);
 }
 
+// 인포박스 틀 전체를 균형 카운팅으로 정확히 추출 (내부 {{...}}, [[...]] 무관).
+// 'infobox' 이름이 든 틀을 우선, 없으면 문서 맨 앞의 첫 틀을 반환.
+function extractInfoboxTemplate(wikitext) {
+    // 인포박스 틀 시작 위치 찾기
+    let start = -1;
+    // 1순위: '{{... infobox ...' (대소문자 무관, 슬래시 포함 — {{Infobox/character}})
+    const ibNamed = wikitext.match(/\{\{[^\n}]*infobox/i);
+    if (ibNamed) start = ibNamed.index;
+    if (start < 0) {
+        // 2순위: 문서 맨 앞쪽의 첫 다중행 틀 ({{Spell, {{Individual infobox, {{Movie 등)
+        // 단 hatnote성 틀({{Quote, {{For, {{CharHub 등)은 건너뜀
+        const re = /\{\{([A-Za-z][^\n|}]*)/g;
+        let m;
+        while ((m = re.exec(wikitext)) !== null) {
+            const name = m[1].trim().toLowerCase();
+            if (/^(quote|for|about|main|see also|redirect|youmay|otheruses|spoiler|tt|game|articletype|remake|cite|r|cl|dialogue|charhub|displaytitle|infobox list|alias)/.test(name)) continue;
+            // 이 틀을 균형 카운팅으로 잘라 내부에 '|field =' 줄이 2개 이상이면 인포박스로 간주
+            const tpl = balancedTemplate(wikitext, m.index);
+            if (tpl && (tpl.match(/\n\s*\|[^\n=]*=/g) || []).length >= 2) { start = m.index; break; }
+            if (m.index > 2500) break; // 너무 뒤면 포기
+        }
+    }
+    if (start < 0) return null;
+    return balancedTemplate(wikitext, start);
+}
+
+// 주어진 위치에서 시작하는 {{...}} 틀을 균형 카운팅으로 잘라 반환
+function balancedTemplate(text, start) {
+    if (!text.startsWith('{{', start)) return null;
+    let depth = 0, i = start;
+    for (; i < text.length; i++) {
+        if (text.startsWith('{{', i)) { depth++; i++; }
+        else if (text.startsWith('}}', i)) { depth--; i++; if (depth === 0) { i++; break; } }
+    }
+    return text.slice(start, i);
+}
+
+// 인포박스 틀 텍스트에서 의미있는 필드만 추출. 멀티라인 값/ref/gallery/convert 처리.
+function parseInfoboxFields(ibText) {
+    const wanted = {
+        incantation: 'incantation', type: 'type', light: 'light', effect: 'effect',
+        creator: 'creator', species: 'species', classification: 'classification',
+        alias: 'alias', status: 'status', gender: 'gender', sex: 'gender',
+        born: 'born', died: 'died', house: 'house', loyalty: 'loyalty',
+        nationality: 'nationality', blood: 'blood', occupation: 'occupation',
+        title: 'title', rank: 'rank', affiliation: 'affiliation', affiliations: 'affiliation',
+        wand: 'wand', patronus: 'patronus', boggart: 'boggart', 'real name': 'real name',
+        'jp name': null, family: 'family', age: 'age', height: 'height',
+        first: 'first appearance', last: 'last appearance', aka: 'aka',
+        'date of birth': 'born', hair: 'hair', eyes: 'eyes',
+    };
+    // 틀 내부를 |로 분할 (단 [[..]], {{..}} 안의 |는 보호)
+    const inner = ibText.replace(/^\{\{[^\n|]*/, '').replace(/\}\}\s*$/, '');
+    const parts = [];
+    let depth = 0, buf = '';
+    for (let i = 0; i < inner.length; i++) {
+        const c = inner[i];
+        if (inner.startsWith('{{', i) || inner.startsWith('[[', i)) { depth++; buf += inner.substr(i, 2); i++; continue; }
+        if (inner.startsWith('}}', i) || inner.startsWith(']]', i)) { depth--; buf += inner.substr(i, 2); i++; continue; }
+        if (c === '|' && depth === 0) { parts.push(buf); buf = ''; continue; }
+        buf += c;
+    }
+    if (buf) parts.push(buf);
+
+    const out = [];
+    for (const part of parts) {
+        const eq = part.indexOf('=');
+        if (eq < 0) continue;
+        const key = part.slice(0, eq).trim().toLowerCase();
+        if (!(key in wanted) || wanted[key] === null) continue;
+        const label = wanted[key];
+        // 값 정리: <gallery> 통째 제거, <ref> 제거, 그 후 stripMarkup
+        let val = part.slice(eq + 1);
+        val = val.replace(/<gallery[\s\S]*?<\/gallery>/gi, '');
+        val = val.replace(/<ref[^>]*>[\s\S]*?<\/ref>/gi, '').replace(/<ref[^>]*\/>/gi, '');
+        val = val.replace(/\{\{[Cc]onvert\s*\|\s*([^|}]*)\|([^|}]*)[^}]*\}\}/g, '$1$2'); // {{convert|181|cm}} -> 181cm
+        val = val.replace(/<!--[\s\S]*?-->/g, '');
+        val = stripMarkup(val);
+        // 목록형(여러 줄/별표)은 첫 줄만, 너무 길면 자름
+        let lines = val.split('\n').map(s => s.replace(/^\s*[*#]+\s*/, '').trim()).filter(Boolean);
+        if (!lines.length) continue;
+        let v = lines[0];
+        // 여러 항목이면 처음 2~3개를 쉼표로
+        if (lines.length > 1 && lines.length <= 4 && lines.every(l => l.length < 40)) {
+            v = lines.join(', ');
+        }
+        v = v.replace(/\}+\s*$/, '').replace(/\s{2,}/g, ' ').trim();
+        if (v && v.length <= 120) out.push(`${label}: ${v}`);
+    }
+    return out;
+}
+
 function cleanGeneric(wikitext, fullArticle) {
     // 미션/사건/영화 문서: Plot 섹션을 최우선으로, 없으면 Synopsis/Summary/Story/Overview 순.
     // (영화 문서는 Synopsis(짧은 소개)와 Plot(실제 줄거리)이 둘 다 있는 경우가 많아,
@@ -715,40 +803,26 @@ function cleanGeneric(wikitext, fullArticle) {
         return combined.trim();
     }
 
-    const infoboxFields = [];
-    const infoboxMatch = wikitext.match(/\{\{[^\n]*infobox([\s\S]*?)\n\}\}/i);
-    if (infoboxMatch) {
-        const wanted = ['incantation', 'type', 'light', 'effect', 'creator', 'species',
-            'classification', 'difficulty', 'ingredients', 'characteristics', 'alias',
-            'status', 'gender', 'born', 'died', 'house', 'loyalty', 'location', 'region',
-            'realname', 'aliases', 'affiliation', 'powers', 'abilities', 'origin', 'identity'];
-        for (const line of infoboxMatch[1].split('\n')) {
-            const fm = line.match(/^\s*\|\s*([a-zA-Z_0-9]+)\s*=\s*(.+)/);
-            if (fm && wanted.includes(fm[1].toLowerCase())) {
-                const val = stripMarkup(fm[2]);
-                if (val) infoboxFields.push(`${fm[1]}: ${val}`);
-            }
-        }
-    }
-    // MCU 위키 인포박스({{Character / {{Movie 등, 'infobox' 단어 없음)에서 핵심 필드만 발췌
-    if (!infoboxFields.length) {
-        const mcuLabels = {
-            'real name': 'Real name', 'species': 'Species', 'gender': 'Gender',
-            'status': 'Status', 'title': 'Title', 'affiliation': 'Affiliation',
-            'director': 'Director', 'release': 'Release', 'runtime': 'Runtime',
-        };
+    // --- 인포박스 필드 추출 (모든 세계관 위키 대응) ---
+    // 1) 'infobox' 단어가 든 틀이 있으면 그 틀을, 없으면 문서 맨 앞 첫 틀을 인포박스로 간주.
+    //    균형 카운팅으로 틀 전체를 정확히 잘라냄(내부 {{convert}}, [[File:]], <gallery> 무관).
+    const ibRaw = extractInfoboxTemplate(wikitext);
+    const infoboxFields = ibRaw ? parseInfoboxFields(ibRaw) : [];
+    // MCU 위키 인포박스({{Character / {{Movie 등)에서 director/release 등 추가 발췌
+    if (ibRaw) {
+        const mcuLabels = { director: 'Director', release: 'Release', runtime: 'Runtime' };
         for (const [field, label] of Object.entries(mcuLabels)) {
-            // 줄 시작 | field = 값 ... 다음 | 또는 }} 전까지
-            const re = new RegExp(`\\n\\|\\s*${field}\\s*=\\s*([^\\n]*)`, 'i');
-            const m = wikitext.match(re);
+            const m = ibRaw.match(new RegExp(`\\n\\|\\s*${field}\\s*=\\s*([^\\n]*)`, 'i'));
             if (m) {
-                let v = stripMarkup(m[1]).replace(/\}+\s*$/,'').replace(/\s*\(formerly\)\s*/gi, ' ').trim();
-                // 너무 길거나(목록형) 비면 건너뜀
-                if (v && v.length <= 80 && !v.includes('*')) infoboxFields.push(`${label}: ${v}`);
+                const v = stripMarkup(m[1]).replace(/\}+\s*$/, '').trim();
+                if (v && v.length <= 80 && !v.includes('*') && !infoboxFields.some(f => f.startsWith(label)))
+                    infoboxFields.push(`${label}: ${v}`);
             }
         }
     }
     let body = removeAppendices(wikitext);
+    // 추출한 인포박스 틀을 본문에서 제거 (필드는 위에서 이미 발췌함)
+    if (ibRaw) body = body.replace(ibRaw, '');
     body = body.replace(/\{\{[^\n]*infobox[\s\S]*?\n\}\}/gi, '');
     // {{For|...}} {{Quote|...}} 등 hatnote/인용 템플릿은 본문에서 제거
     body = body.replace(/\{\{(?:For|Quote|About|Main|See also|Redirect)\b[^{}]*(?:\{\{[^{}]*\}\}[^{}]*)*\}\}/gi, '');
@@ -1243,5 +1317,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v2.0] loaded');
+    console.log('[Dalchive v2.2] loaded');
 });
