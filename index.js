@@ -824,6 +824,10 @@ function cleanGeneric(wikitext, fullArticle) {
     // 추출한 인포박스 틀을 본문에서 제거 (필드는 위에서 이미 발췌함)
     if (ibRaw) body = body.replace(ibRaw, '');
     body = body.replace(/\{\{[^\n]*infobox[\s\S]*?\n\}\}/gi, '');
+    // 요약 모드: 본문은 도입부(첫 == 헤딩 전)만. 전체 모드: 본문 전체.
+    if (!fullArticle) {
+        body = body.split(/\n==[^=]/)[0];
+    }
     // {{For|...}} {{Quote|...}} 등 hatnote/인용 템플릿은 본문에서 제거
     body = body.replace(/\{\{(?:For|Quote|About|Main|See also|Redirect)\b[^{}]*(?:\{\{[^{}]*\}\}[^{}]*)*\}\}/gi, '');
     // {{Nihongo|영어|일본어|로마자|...}} -> 첫 인자(영어 이름)만 남김
@@ -1317,5 +1321,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v2.2] loaded');
+    console.log('[Dalchive v2.3] loaded');
 });
