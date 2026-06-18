@@ -42,6 +42,8 @@ const WORLDS = {
     harrypotter: {
         name: 'Harry Potter',
         emoji: '⚡',
+        desc: '마법사 세계 · 호그와트',
+        tint: 'hp',
         api: 'https://harrypotter.fandom.com/api.php',
         categories: {
             '🧙 Characters (인물)': [
@@ -59,7 +61,7 @@ const WORLDS = {
             '🪄 Spells (주문)': [
                 'Disarming Charm', 'Patronus Charm', 'Killing Curse', 'Levitation Charm', 'Wand-Lighting Charm',
                 'Unlocking Charm', 'Summoning Charm', 'Stunning Spell', 'Shield Charm', 'Cruciatus Curse',
-                'Imperius Curse', 'Sectumsempra', 'Laughing Charm', 'Memory Charm', 'Reductor Curse',
+                'Imperius Curse', 'Sectumsempra', 'Laughing Curse', 'Memory Charm', 'Reductor Curse',
                 'Full Body-Bind Curse', 'Episkey', 'Water-Making Spell', 'Fire-Making Spell', 'Mending Charm',
                 'Wand-Extinguishing Charm', 'Confundus Charm', 'Dancing Feet Spell', 'Legilimency', 'Blasting Curse',
                 'Severing Charm', 'Engorgement Charm', 'Bat-Bogey Hex', 'Tickling Charm', 'Knockback Jinx',
@@ -130,6 +132,8 @@ const WORLDS = {
     marvel: {
         name: 'Marvel (MCU)',
         emoji: '🦸',
+        desc: '슈퍼히어로 · 어벤져스',
+        tint: 'mcu',
         api: 'https://marvelcinematicuniverse.fandom.com/api.php',
         categories: {
             '🦸 Heroes (히어로)': [
@@ -217,6 +221,8 @@ const WORLDS = {
     cod: {
         name: 'Call of Duty',
         emoji: '🎯',
+        desc: '밀리터리 · 현대전',
+        tint: 'cod',
         api: 'https://callofduty.fandom.com/api.php',
         categories: {
             '🪖 Characters (캐릭터)': [
@@ -284,8 +290,10 @@ const WORLDS = {
         },
     },
     residentevil: {
-        name: 'Resident Evil / Biohazard',
+        name: 'Resident Evil',
         emoji: '🧟',
+        desc: '서바이벌 호러 · Biohazard',
+        tint: 're',
         api: 'https://residentevil.fandom.com/api.php',
         categories: {
             '👤 Characters (인물)': [
@@ -302,18 +310,24 @@ const WORLDS = {
                 'Licker', 'Crimson Head', 'Chimera', 'Ustanak', 'Regenerador',
                 'Plaga', 'Ganado',
             ],
-            '🏢 Organizations (조직)': [
-                'Umbrella Corporation', 'S.T.A.R.S.', 'B.S.A.A.', 'Tricell',
-                'Division of Security Operations', 'Raccoon City Police Department',
-                'Neo Umbrella', 'Blue Umbrella', 'Los Iluminados',
+            '🗺️ Locations (장소)': [
+                'Raccoon City', 'Spencer Mansion', 'Arklay Mountains',
+                'Tall Oaks', 'Tall Oaks Church', 'Terragrigia', 'Baker Estate', 'Rockfort Island',
             ],
             '🧬 Viruses & Pathogens (바이러스·병원체)': [
                 't-Virus', 'G-Virus', 't-Veronica', 'Uroboros', 'C-Virus',
                 'Las Plagas', 'Cadou', 'Megamycete', 'NE-α Type',
             ],
-            '🗺️ Locations (장소)': [
-                'Raccoon City', 'Spencer Mansion', 'Arklay Mountains',
-                'Tall Oaks', 'Tall Oaks Church', 'Terragrigia', 'Baker Estate', 'Rockfort Island',
+            '🏢 Organizations (조직)': [
+                'Umbrella Corporation', 'S.T.A.R.S.', 'B.S.A.A.', 'Tricell',
+                'Division of Security Operations', 'Raccoon City Police Department',
+                'Neo Umbrella', 'Blue Umbrella', 'Los Iluminados',
+            ],
+            '🎮 Game Plots (게임별 플롯)': [
+                'Resident Evil', 'Resident Evil 2', 'Resident Evil 3: Nemesis',
+                'Resident Evil CODE:Veronica', 'Resident Evil 4 (2023 game)/plot',
+                'Resident Evil 5', 'Resident Evil 6', 'Resident Evil 7: Biohazard',
+                'Resident Evil Village',
             ],
             '⚔️ Events (주요 사건)': [
                 'Raccoon City Destruction Incident', 'Mansion Incident',
@@ -321,12 +335,6 @@ const WORLDS = {
                 'Harvardville Airport incident',
                 'Raid on the Spencer Estate', 'Rockfort Island Incident',
                 'Sheena Island Incident', 'Sushestvovanie Island incident',
-            ],
-            '🎮 Game Plots (게임별 플롯)': [
-                'Resident Evil', 'Resident Evil 2', 'Resident Evil 3: Nemesis',
-                'Resident Evil CODE:Veronica', 'Resident Evil 4 (2023 game)/plot',
-                'Resident Evil 5', 'Resident Evil 6', 'Resident Evil 7: Biohazard',
-                'Resident Evil Village',
             ],
         },
     },
@@ -1072,7 +1080,7 @@ function renderGroupList(label, groupsObj) {
     const items = Object.entries(groupsObj).map(([name, arr]) => ({
         group: true, title: name, count: arr.length,
     }));
-    document.getElementById('cp-status').textContent = `${label} — 시리즈를 선택하세요`;
+    document.getElementById('cp-status').textContent = `${catDisplay(label)} — 시리즈를 선택하세요`;
     renderList(items);
 }
 
@@ -1089,13 +1097,20 @@ function renderMissionList(label, seriesName, missions) {
 }
 
 // 세계관을 골랐을 때: 카테고리 버튼을 그 세계관 것으로 다시 그림
+// 카테고리 라벨에서 표시용 텍스트만 가공: 끝에 붙은 " (한글설명)" 제거.
+// 데이터 키 자체는 그대로 두므로(이모지+영문+한글) dalchive-data.json 매칭에 영향 없음.
+function catDisplay(label) {
+    // 맨 끝의 괄호 묶음 하나만 제거. "🧙 Characters (인물)" -> "🧙 Characters"
+    return label.replace(/\s*\([^)]*\)\s*$/, '').trim();
+}
+
 function enterWorld(worldId) {
     currentWorld = worldId;
     const w = WORLDS[worldId];
     document.getElementById('cp-world-label').textContent = `${w.emoji} ${w.name}`;
     const cats = document.getElementById('cp-cats');
     cats.innerHTML = Object.keys(w.categories).map(label =>
-        `<button class="cp-cat menu_button" data-label="${encodeURIComponent(label)}">${label}</button>`).join('');
+        `<button class="cp-cat menu_button" data-label="${encodeURIComponent(label)}">${catDisplay(label)}</button>`).join('');
     // 카테고리 버튼 이벤트
     cats.querySelectorAll('.cp-cat').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -1109,7 +1124,7 @@ function enterWorld(worldId) {
             } else {
                 currentGroupBack = null;
                 const items = val.map(t => ({ title: t }));
-                document.getElementById('cp-status').textContent = `${label} — ${items.length}개`;
+                document.getElementById('cp-status').textContent = `${catDisplay(label)} — ${items.length}개`;
                 renderList(items);
             }
         });
@@ -1125,17 +1140,30 @@ function enterWorld(worldId) {
 // ------------------------------------------------------------
 function popupHTML() {
     const worldButtons = Object.entries(WORLDS).map(([id, w]) =>
-        `<button class="cp-world menu_button" data-world="${id}">${w.emoji} ${w.name}</button>`).join('');
+        `<button class="cp-world menu_button${w.tint ? ' cp-world--' + w.tint : ''}" data-world="${id}">
+            <span class="cp-world-ico">${w.emoji}</span>
+            <span class="cp-world-meta">
+                <span class="cp-world-name">${w.name}</span>
+                ${w.desc ? `<span class="cp-world-tag">${w.desc}</span>` : ''}
+            </span>
+            <span class="cp-world-go">→</span>
+        </button>`).join('');
     return `
     <div id="cp-root">
         <div class="cp-title">
-            <span class="cp-title-text">📚 Dalchive</span>
+            <span class="cp-title-text">
+                <span class="cp-title-mark">📚</span>
+                <span class="cp-title-words">
+                    <span class="cp-title-name">Dalchive</span>
+                    <span class="cp-title-sub">WORLDBOOK ARCHIVE</span>
+                </span>
+            </span>
             <button id="cp-close" class="cp-close" title="닫기" type="button">✕</button>
         </div>
 
         <!-- 세계관 선택 -->
         <div id="cp-world-view">
-            <div class="cp-prompt">어떤 세계관이 궁금하신가요?</div>
+            <div class="cp-prompt">어떤 세계관이 궁금하신가요? <span class="cp-prompt-emo">✨</span></div>
             <div class="cp-worlds">${worldButtons}</div>
             <div class="cp-profile-row">
                 <label>🌐 번역 프로필:
@@ -1321,5 +1349,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v2.3] loaded');
+    console.log('[Dalchive v2.4.5] loaded');
 });
