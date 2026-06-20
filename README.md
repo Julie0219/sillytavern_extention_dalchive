@@ -18,6 +18,7 @@
 - 🦸 마블 영화 (Marvel Cinematic Universe)
 - 🎯 콜 오브 듀티 (Call of Duty)
 - 🧟 레지던트 이블 (Resident Evil)
+- 🦇 DC 배트맨 패밀리 (DC Comics)
 
 각 세계관에는 **⚔️ 주요 사건**과 **작품별 플롯**(영화·게임·캠페인) 카테고리가
 있어, 롤플레이 배경 자료로 활용할 수 있습니다.

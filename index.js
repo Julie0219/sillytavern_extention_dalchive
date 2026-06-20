@@ -61,7 +61,7 @@ const WORLDS = {
             '🪄 Spells (주문)': [
                 'Disarming Charm', 'Patronus Charm', 'Killing Curse', 'Levitation Charm', 'Wand-Lighting Charm',
                 'Unlocking Charm', 'Summoning Charm', 'Stunning Spell', 'Shield Charm', 'Cruciatus Curse',
-                'Imperius Curse', 'Sectumsempra', 'Laughing Curse', 'Memory Charm', 'Reductor Curse',
+                'Imperius Curse', 'Sectumsempra', 'Laughing curse', 'Memory Charm', 'Reductor Curse',
                 'Full Body-Bind Curse', 'Episkey', 'Water-Making Spell', 'Fire-Making Spell', 'Mending Charm',
                 'Wand-Extinguishing Charm', 'Confundus Charm', 'Dancing Feet Spell', 'Legilimency', 'Blasting Curse',
                 'Severing Charm', 'Engorgement Charm', 'Bat-Bogey Hex', 'Tickling Charm', 'Knockback Jinx',
@@ -150,7 +150,7 @@ const WORLDS = {
                 'Thanos', 'Loki', 'Ultron', 'Helmut Zemo', 'Wenwu',
                 'Hela', 'Killmonger', 'Thunderbolt Ross', 'Red Skull',
                 'Ego', 'Kang the Conqueror', 'Quentin Beck', 'Adrian Toomes',
-                'Wilson Fisk', 'Kingo', 'Agatha Harkness', 'Mysterio',
+                'Wilson Fisk', 'Bullseye', 'Kingo', 'Agatha Harkness', 'Mysterio',
                 'Green Goblin', 'Doctor Octopus',
             ],
             '👥 Teams (팀·조직)': [
@@ -226,11 +226,11 @@ const WORLDS = {
         api: 'https://callofduty.fandom.com/api.php',
         categories: {
             '🪖 Characters (캐릭터)': [
-                'John Price', 'Simon "Ghost" Riley', 'John "Soap" MacTavish',
+                'John Price (Reboot)', 'Simon "Ghost" Riley (Reboot)', 'Johnny "Soap" MacTavish',
                 'Kyle "Gaz" Garrick', 'Alejandro Vargas', 'Rodolfo Parra',
                 'Kate Laswell', 'Farah Karim', 'Alex Keller', 'Phillip Graves',
                 'Keegan P. Russ', 'Kim "Horangi" Hong-jin', 'König', 'Nikto',
-                'Vladimir Makarov', 'Valeria Garza', 'Roach', 'Nikolai',
+                'Vladimir Makarov (Reboot)', 'Valeria Garza', 'Roach', 'Nikolai (Call of Duty)',
             ],
             '🏴 Factions (세력)': [
                 'Task Force 141', 'Spetsnaz/Modern Warfare (Reboot)', 'Ultranationalists',
@@ -338,6 +338,75 @@ const WORLDS = {
             ],
         },
     },
+    dc: {
+        name: 'DC (Batman Family)',
+        emoji: '🦇',
+        desc: '배트맨 패밀리 · 고담',
+        tint: 'dc',
+        api: 'https://dc.fandom.com/api.php',
+        categories: {
+            // RP에서 대세인 제이슨 토드(레드후드)·나이트윙을 앞에 두고, 배트 패밀리 중심으로 선별.
+            // DC 위키는 한 인물에 여러 우주(continuity) 문서가 있어, 현행 메인인 (Prime Earth) 기준으로 지정.
+            '🦇 Bat-Family (배트 패밀리)': [
+                'Jason Todd (Prime Earth)', 'Richard Grayson (Prime Earth)',
+                'Timothy Drake (Prime Earth)', 'Damian Wayne (Prime Earth)',
+                'Bruce Wayne (Prime Earth)', 'Barbara Gordon (Prime Earth)',
+                'Cassandra Cain (Prime Earth)', 'Stephanie Brown (Prime Earth)',
+                'Alfred Pennyworth (Prime Earth)', 'Duke Thomas (Prime Earth)',
+                'Kate Kane (Prime Earth)', 'Helena Bertinelli (Prime Earth)',
+                'Selina Kyle (Prime Earth)', 'James Gordon (Prime Earth)',
+                'Harper Row (Prime Earth)',
+            ],
+            '🎭 Allies & Titans (동료·타이탄즈)': [
+                'Roy Harper (Prime Earth)', 'Koriand\'r (Prime Earth)',
+                'Artemis (Bana-Mighdall) (Prime Earth)', 'Bizarro (Jason Todd\'s Bizarro)',
+                'Wally West (Prime Earth)', 'Donna Troy (Prime Earth)',
+                'Garfield Logan (Prime Earth)', 'Raven (Prime Earth)',
+                'Conner Kent (Prime Earth)', 'Jonathan Kent (Prime Earth)',
+            ],
+            '🃏 Villains (빌런)': [
+                'Joker (Prime Earth)', 'Ra\'s al Ghul (Prime Earth)',
+                'Talia al Ghul (Prime Earth)', 'Slade Wilson (Prime Earth)',
+                'Harvey Dent (Prime Earth)', 'Edward Nashton (Prime Earth)',
+                'Oswald Cobblepot (Prime Earth)', 'Pamela Isley (Prime Earth)',
+                'Harleen Quinzel (Prime Earth)', 'Jonathan Crane (Prime Earth)',
+                'Bane (Prime Earth)', 'Roman Sionis (Prime Earth)',
+                'Victor Fries (Prime Earth)', 'Black Mask',
+            ],
+            '🏢 Teams & Organizations (팀·조직)': [
+                'Outlaws (Prime Earth)', 'Teen Titans (Prime Earth)',
+                'League of Assassins (Prime Earth)', 'Court of Owls (Prime Earth)',
+                'Batman Incorporated (Prime Earth)', 'Birds of Prey (Prime Earth)',
+                'Justice League (Prime Earth)',
+            ],
+            '🗺️ Locations (장소)': [
+                'Gotham City', 'Blüdhaven', 'Wayne Manor', 'Batcave',
+                'Arkham Asylum', 'Crime Alley', 'Wayne Enterprises',
+                'Ace Chemicals', 'Iceberg Lounge',
+            ],
+            '🦇 Batman 스토리 (주요 스토리)': [
+                'Batman: A Death in the Family', 'Batman: Under the Hood',
+                'Batman: The Court of Owls', 'Batman: Battle for the Cowl',
+                'Robin War',
+            ],
+            '🔴 Red Hood 스토리 (RHotO Vol 1)': [
+                'Red Hood and the Outlaws Vol 1 1', 'Red Hood and the Outlaws Vol 1 2',
+                'Red Hood and the Outlaws Vol 1 3', 'Red Hood and the Outlaws Vol 1 4',
+                'Red Hood and the Outlaws Vol 1 5', 'Red Hood and the Outlaws Vol 1 6',
+                'Red Hood and the Outlaws Vol 1 7',
+            ],
+            '🦅 Nightwing 스토리 (Vol 1 미니시리즈)': [
+                'Nightwing Vol 1 1', 'Nightwing Vol 1 2',
+                'Nightwing Vol 1 3', 'Nightwing Vol 1 4',
+                'Nightwing: Ties That Bind',
+            ],
+            '🌃 Nightwing: Year One (Vol 2)': [
+                'Nightwing Vol 2 101', 'Nightwing Vol 2 102',
+                'Nightwing Vol 2 103', 'Nightwing Vol 2 104',
+                'Nightwing Vol 2 105', 'Nightwing Vol 2 106',
+            ],
+        },
+    },
 };
 
 // ============================================================
@@ -433,6 +502,62 @@ async function apiGet(params) {
 async function searchWiki(query) {
     const data = await apiGet(`action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=15`);
     return (data?.query?.search ?? []).map(s => ({ title: s.title, wordcount: s.wordcount }));
+}
+
+// MediaWiki가 렌더링한 '깨끗한' 본문 평문(extract)을 가져온다.
+// ref/quote/table/template이 모두 제거된 상태라, 위키텍스트 직접 파싱에서 생기던
+// 본문 잘림(예: Quote 템플릿 뒤 문단 누락)을 근본적으로 피할 수 있다.
+// intro=true면 도입부만, false면 문서 전체 평문.
+async function fetchExtract(title, intro, depth = 0) {
+    try {
+        const introParam = intro ? '&exintro=1' : '';
+        const data = await apiGet(
+            `action=query&prop=extracts&explaintext=1&redirects=1${introParam}&titles=${encodeTitle(title)}`
+        );
+        const pages = data?.query?.pages;
+        if (!pages) return '';
+        const page = Object.values(pages)[0];
+        if (!page || page.missing !== undefined) return '';
+        return (page.extract || '').trim();
+    } catch (e) {
+        return '';
+    }
+}
+
+// extract(평문)에서 RP에 불필요한 말미 섹션을 잘라낸다.
+// 평문 extract의 섹션 제목은 별도 마크업 없이 한 줄로 오므로 줄 단위로 처리.
+function trimExtractTail(text) {
+    if (!text) return '';
+    const cutHeadings = [
+        'Appearances', 'Notes and references', 'References', 'Behind the scenes',
+        'See also', 'External links', 'Gallery', 'Etymology', 'Notes', 'Sources',
+        'Trivia', 'Links and References', 'Trivia and references', 'Quotes', 'Quotations',
+        'Personalization', 'Skins', 'Variants', 'Achievements', 'Trophies', 'Videos',
+        'Audio', 'Multiplayer', 'In other media', 'Powers and Abilities', 'Paraphernalia',
+        'Related', 'Recommended Reading', 'Other Versions', 'Alternate Realities',
+        'Appearances and References', 'Media', 'Trivia and Notes',
+        // 코믹 이슈 문서의 말미 섹션
+        'Appearing in', 'Featured Characters', 'Supporting Characters', 'Antagonists',
+        'Other Characters', 'Items', 'Vehicles',
+    ];
+    // 'Appearing in "제목"'처럼 뒤에 제목이 붙는 섹션도 잡기 위해 부분 매칭 허용 항목
+    const prefixHeads = ['Appearing in', 'Featured Characters'];
+    const lines = text.split('\n');
+    let cut = lines.length;
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        const low = line.toLowerCase();
+        // 섹션 제목 줄: 짧고 문장부호로 안 끝나는 한 줄 (제목 포함 시 좀 더 길 수 있음)
+        if (line && line.length < 60 && !/[.!?,;]$/.test(line)) {
+            const exact = cutHeadings.some(h => low === h.toLowerCase());
+            const prefix = prefixHeads.some(h => low.startsWith(h.toLowerCase()));
+            if (exact || prefix) {
+                cut = i;
+                break;
+            }
+        }
+    }
+    return lines.slice(0, cut).join('\n').trim();
 }
 
 // API 제목 인코딩: 슬래시(하위문서)는 유지하고 나머지만 인코딩
@@ -629,9 +754,17 @@ function cleanWikitext(wikitext, fullArticle) {
     // 마블(MCU 위키)은 {{Character}}/{{Movie}} 등 일반 인포박스+산문 구조라 cleanGeneric으로 처리.
     // (구 코믹스 위키의 {{Marvel Database:}} 거대 틀이 있으면 cleanMarvel로 분기 — 하위호환용)
     const isMarvelTemplate = /\{\{Marvel Database:/i.test(wikitext);
-    let result = (currentWorld === 'marvel' && isMarvelTemplate)
-        ? cleanMarvel(wikitext, fullArticle)
-        : cleanGeneric(wikitext, fullArticle);
+    // DC: 본문이 {{DC Database:... Template}} 거대 틀의 Overview/HistoryText 필드 안에 있음.
+    //     extract API로는 본문이 안 나와서 위키텍스트의 필드를 직접 뽑아야 함.
+    const isDCTemplate = /\{\{DC Database:/i.test(wikitext);
+    let result;
+    if (currentWorld === 'marvel' && isMarvelTemplate) {
+        result = cleanMarvel(wikitext, fullArticle);
+    } else if (isDCTemplate) {
+        result = cleanDC(wikitext, fullArticle);
+    } else {
+        result = cleanGeneric(wikitext, fullArticle);
+    }
     // 청소 후 내용이 거의 없으면(본문이 통째로 틀/표였던 경우) 안내
     if (result.replace(/[\s:·]/g, '').length < 15) {
         return '(이 항목은 위키에 표/틀 위주로 되어 있어 설명 추출이 어려워요. 검색으로 다른 문서를 시도해 보세요.)';
@@ -696,6 +829,105 @@ function cleanMarvel(wikitext, fullArticle) {
     return out.trim() || stripMarkup(wikitext).slice(0, fullArticle ? 100000 : 800);
 }
 
+// DC Database 거대 틀에서 내용 추출.
+//   - 인포박스 핵심 필드(별명/키/눈색 등)
+//   - Overview(도입부 설명) = 요약용
+//   - HistoryText(서사 본문) = 전체용
+function cleanDC(wikitext, fullArticle) {
+    // 인포박스 핵심 필드 (RP에 유용한 것 위주로 선별)
+    const fieldLabels = {
+        RealName: 'real name', MainAlias: 'aka',
+        Gender: 'gender', Height: 'height',
+        Eyes: 'eyes', Hair: 'hair', Citizenship: 'nationality',
+        Occupation: 'occupation',
+        First: 'first appearance',
+        // 장소
+        OfficialName: 'name', Country: 'country', City: 'city', Population: 'population',
+    };
+    const fields = [];
+    for (const [f, label] of Object.entries(fieldLabels)) {
+        const v = extractField(wikitext, f);
+        if (!v) continue;
+        // 키는 따옴표(피트/인치)를 이탤릭 제거에서 보호
+        const isMeasure = (label === 'height');
+        let raw = v;
+        if (isMeasure) raw = raw.replace(/'/g, '\u0002APOS\u0002').replace(/"/g, '\u0002QUOT\u0002');
+        let c = stripMarkup(raw);
+        if (isMeasure) c = c.replace(/\u0002APOS\u0002/g, "'").replace(/\u0002QUOT\u0002/g, '"');
+        // <br> 기준 여러 값이면 처음 2~3개만, 줄단위 정리
+        let lines = c.split('\n').map(l => l.replace(/^\s*[*#]+\s*/, '').trim()).filter(Boolean);
+        if (!lines.length) continue;
+        let val = lines[0];
+        if (lines.length > 1 && lines.length <= 4 && lines.every(l => l.length < 40)) {
+            val = lines.join(', ');
+        }
+        // 주석 잔재 제거(예: "6'<!-- ... -->")
+        val = val.replace(/<!--[\s\S]*?-->/g, '').replace(/<!--.*$/, '');
+        val = val.replace(/\}+\s*$/, '').replace(/\s{2,}/g, ' ').trim();
+        if (val && val.length <= 120) fields.push(`${label}: ${val}`);
+    }
+
+    // 본문: Overview(도입부), HistoryText(서사)
+    const overviewRaw = extractField(wikitext, 'Overview');
+    const historyRaw = extractField(wikitext, 'HistoryText');
+    const ovText = overviewRaw ? stripMarkup(overviewRaw).trim() : '';
+    const histText = historyRaw ? stripMarkup(historyRaw).trim() : '';
+
+    // 개별 코믹 이슈 문서: {{DC Database:Comic Template}} / {{DC Database:Digital Comic Template}}.
+    //   줄거리가 Overview/HistoryText가 아니라 | Synopsis1 =, | Synopsis2 = ... 에 들어있음.
+    //   (위키에서 'Synopsis for "제목"' 헤딩으로 렌더되는 그 내용)
+    //   여러 스토리(Synopsis1~N)면 StoryTitle로 구분해 모두 이어붙임. 요약/전체 모두 줄거리 전체를 보여줌.
+    const isComicIssue = /\{\{DC Database:(?:[A-Za-z ]*)?(?:Comic|Digital Comic) Template/i.test(wikitext);
+    if (isComicIssue) {
+        const stories = [];
+        for (let i = 1; i <= 6; i++) {
+            const synRaw = extractField(wikitext, 'Synopsis' + i);
+            if (!synRaw) continue;
+            let syn = stripMarkup(synRaw).trim();
+            // 'Solicit Synopsis'(출판사 홍보문) 잔재나 빈 값/플레이스홀더 제외
+            if (!syn || syn.length < 15) continue;
+            if (/^(none|n\/a|tba|unknown)\.?$/i.test(syn)) continue;
+            const stRaw = extractField(wikitext, 'StoryTitle' + i);
+            const st = stRaw ? stripMarkup(stRaw).trim() : '';
+            stories.push(st && st.length <= 80 ? `"${st}"\n${syn}` : syn);
+        }
+        if (stories.length) {
+            // 코믹 이슈는 요약/전체 모두 시놉시스 전체만 (필드·메타 생략)
+            return stories.join('\n\n').trim();
+        }
+        // Synopsis가 비었으면 아래 일반 처리로 폴백
+    }
+
+    // 스토리라인 문서 여부: Overview가 작가/출판 등 '메타 소개'라,
+    // 요약에서는 실제 줄거리(HistoryText=시놉시스)를 보여주는 게 RP에 유용.
+    const isStoryline = /\{\{DC Database:Storyline Template/i.test(wikitext);
+
+    let desc;
+    let skipFields = false;
+    if (fullArticle) {
+        // 전체: 도입부 + 서사 본문
+        const parts = [];
+        if (ovText) parts.push(ovText);
+        if (histText) parts.push(histText);
+        desc = parts.join('\n\n');
+    } else if (isStoryline) {
+        // 스토리라인 요약: 시놉시스(HistoryText) '전체'만. 필드는 생략.
+        // (시놉시스가 대체로 짧고, 요약에선 줄거리만 보고 싶다는 요청)
+        desc = histText || ovText;
+        if (histText) skipFields = true;
+    } else {
+        // 캐릭터/장소 요약: 도입부(Overview)를 우선. 없으면 서사 앞부분.
+        desc = ovText || (histText ? clampSummary(histText) : '');
+    }
+
+    let out = '';
+    if (fields.length && !skipFields) out += fields.join('\n') + '\n\n';
+    out += desc;
+    out = out.trim();
+    // 폴백: 둘 다 비면 일반 파서 시도
+    return out || cleanGeneric(wikitext, fullArticle);
+}
+
 // 인포박스 틀 전체를 균형 카운팅으로 정확히 추출 (내부 {{...}}, [[...]] 무관).
 // 'infobox' 이름이 든 틀을 우선, 없으면 문서 맨 앞의 첫 틀을 반환.
 function extractInfoboxTemplate(wikitext) {
@@ -738,7 +970,7 @@ function parseInfoboxFields(ibText) {
     const wanted = {
         incantation: 'incantation', type: 'type', light: 'light', effect: 'effect',
         creator: 'creator', species: 'species', classification: 'classification',
-        alias: 'alias', status: 'status', gender: 'gender', sex: 'gender',
+        alias: 'alias', gender: 'gender', sex: 'gender',
         born: 'born', died: 'died', house: 'house', loyalty: 'loyalty',
         nationality: 'nationality', blood: 'blood', occupation: 'occupation',
         title: 'title', rank: 'rank', affiliation: 'affiliation', affiliations: 'affiliation',
@@ -773,14 +1005,29 @@ function parseInfoboxFields(ibText) {
         val = val.replace(/<ref[^>]*>[\s\S]*?<\/ref>/gi, '').replace(/<ref[^>]*\/>/gi, '');
         val = val.replace(/\{\{[Cc]onvert\s*\|\s*([^|}]*)\|([^|}]*)[^}]*\}\}/g, '$1$2'); // {{convert|181|cm}} -> 181cm
         val = val.replace(/<!--[\s\S]*?-->/g, '');
+        // <br>로 나열된 다중값(aka, rank 등)은 줄바꿈으로 바꿔 항목 분리
+        val = val.replace(/<br\s*\/?>/gi, '\n');
+        // 키/몸무게 등 측정값: 6' 2" 처럼 작은따옴표(피트)·큰따옴표(인치)가
+        // stripMarkup의 이탤릭('' ... '') 제거에 휩쓸려 잘리는 걸 막기 위해
+        // 따옴표를 임시 토큰으로 보호한 뒤 마크업 정리, 끝나고 복원.
+        const isMeasure = (label === 'height' || label === 'age');
+        if (isMeasure) {
+            val = val.replace(/'/g, '\u0002APOS\u0002').replace(/"/g, '\u0002QUOT\u0002');
+        }
         val = stripMarkup(val);
+        if (isMeasure) {
+            val = val.replace(/\u0002APOS\u0002/g, "'").replace(/\u0002QUOT\u0002/g, '"');
+        }
         // 목록형(여러 줄/별표)은 첫 줄만, 너무 길면 자름
         let lines = val.split('\n').map(s => s.replace(/^\s*[*#]+\s*/, '').trim()).filter(Boolean);
         if (!lines.length) continue;
         let v = lines[0];
-        // 여러 항목이면 처음 2~3개를 쉼표로
-        if (lines.length > 1 && lines.length <= 4 && lines.every(l => l.length < 40)) {
-            v = lines.join(', ');
+        // 여러 항목이면 처음 몇 개를 쉼표로. 항목이 많으면(aka 등) 처음 3개만.
+        if (lines.length > 1) {
+            const short = lines.filter(l => l.length < 40);
+            if (short.length >= 2) {
+                v = short.slice(0, 3).join(', ');
+            }
         }
         v = v.replace(/\}+\s*$/, '').replace(/\s{2,}/g, ' ').trim();
         if (v && v.length <= 120) out.push(`${label}: ${v}`);
@@ -793,7 +1040,8 @@ function cleanGeneric(wikitext, fullArticle) {
     // (영화 문서는 Synopsis(짧은 소개)와 Plot(실제 줄거리)이 둘 다 있는 경우가 많아,
     //  Plot을 먼저 잡아야 진짜 줄거리가 나옴)
     let plotMatch = wikitext.match(/\n==+\s*Plot\s*==+\s*([\s\S]*?)(?=\n==[^=]|$)/i)
-        || wikitext.match(/\n==+\s*(?:Synopsis|Summary|Story|Overview)\s*==+\s*([\s\S]*?)(?=\n==[^=]|$)/i);
+        || wikitext.match(/\n==+\s*Synopsis(?:\s+for\b[^\n=]*)?\s*==+\s*([\s\S]*?)(?=\n==[^=]|$)/i)
+        || wikitext.match(/\n==+\s*(?:Summary|Story|Overview)\s*==+\s*([\s\S]*?)(?=\n==[^=]|$)/i);
     if (plotMatch) {
         const plot = stripMarkup(plotMatch[1]).trim();
         // 요약 모드: Plot(줄거리)만 보여줌 (감독·개봉일 등 도입부 메타정보는 전체보기에서)
@@ -989,9 +1237,15 @@ function displayTitle(title) {
         .replace(/\/plot$/i, '')
         .replace(/\s*\((?:\d{4}\s*)?(?:game|film|level|video game|\d{4}\s*game)\)\s*$/i, '')
         .replace(/\s*\(Modern Warfare[^)]*\)\s*$/i, '')
+        .replace(/\s*\(Reboot\)\s*$/i, '')
+        .replace(/\s*\(Call of Duty\)\s*$/i, '')
+        .replace(/\s*\(weapon\)\s*$/i, '')
         .replace(/\s*\(Ghosts\)\s*$/i, '')
         .replace(/\s*\(Event\)\s*$/i, '')
         .replace(/\s*\(level\)\s*$/i, '')
+        .replace(/\s*\((?:Prime Earth|New Earth|Rebirth|Volume \d+)\)\s*$/i, '')
+        // 코믹 이슈: "... Vol 1 5" → "... #5" (표시용. API 호출엔 원제목 사용)
+        .replace(/\s+Vol\s+\d+\s+(\d+)\s*$/i, ' #$1')
         .trim();
 }
 
@@ -1042,9 +1296,173 @@ async function openDetail(title, forceFull) {
         fullBtn.style.display = '';
         fullBtn.textContent = full ? '📑 요약 보기' : '📄 전체 가져오기';
     }
-    const [imgUrl, raw] = await Promise.all([fetchImage(title), fetchWikitext(title, full)]);
+    const [imgUrl, text] = await Promise.all([
+        fetchImage(title),
+        buildDetailText(title, full),
+    ]);
     if (imgUrl) detail.querySelector('.cp-img').innerHTML = `<img src="${imgUrl}" alt="${title}" />`;
-    ta.value = cleanWikitext(raw, full) || '(설명을 찾지 못했어요. 검색으로 다른 제목을 시도해 보세요.)';
+    ta.value = text || '(설명을 찾지 못했어요. 검색으로 다른 제목을 시도해 보세요.)';
+}
+
+// 상세 본문 조립:
+//  - 인포박스 필드(별명/계급/키/눈색 등)는 위키텍스트에서 정확히 추출 (기존 방식 유지)
+//  - 서사 본문(History/Biography/Plot)은 MediaWiki extract(평문)로 받아 붙임
+//    → ref/quote/table 때문에 본문이 중간에 잘리던 문제를 근본적으로 해결.
+//  - 영화/게임 줄거리(plot)·요약 등 기존 특수 처리는 위키텍스트 경로를 우선 시도하고,
+//    본문이 부실하면 extract로 보강.
+async function buildDetailText(title, full) {
+    // 위키텍스트 경로(인포박스 필드 + 기존 파서 본문)
+    let wtParsed = '';
+    let rawWt = '';
+    try {
+        rawWt = await fetchWikitext(title, full);
+        wtParsed = cleanWikitext(rawWt, full) || '';
+    } catch (e) { wtParsed = ''; }
+
+    // plot 하위문서/줄거리 문서는 기존 파서 결과가 가장 정확하므로 그대로 사용
+    if (/\/plot$/i.test(title)) return wtParsed;
+
+    // DC Database 문서는 본문이 거대 틀의 Overview/HistoryText 필드 안에 있어
+    // extract API로는 본문이 안 나온다. cleanDC가 모드별(요약/전체)로 이미
+    // 정확히 처리했으므로 그 결과를 그대로 사용한다.
+    if (typeof rawWt === 'string' && /\{\{DC Database:/i.test(rawWt)) {
+        return wtParsed;
+    }
+
+    // 인포박스 필드 줄(예: "rank: ...", "eyes: Blue")과 본문을 분리.
+    // cleanWikitext는 "필드들\n\n본문" 형태로 반환하므로 첫 빈 줄 기준 분리.
+    const { fields, wtBody } = splitFieldsAndBody(wtParsed);
+
+    // 깨끗한 평문 본문(History/Biography 등)을 extract로 받아 말미 섹션 제거
+    let exBody = '';
+    try {
+        exBody = trimExtractTail(await fetchExtract(title, false));
+    } catch (e) { exBody = ''; }
+
+    // 본문 선택: extract가 위키텍스트 본문보다 충분히 길면 extract 사용(잘림 방지),
+    // 아니면 위키텍스트 본문 유지(영화 plot 등 특수 케이스 보호).
+    let body = wtBody;
+    if (exBody && exBody.length > wtBody.length * 0.9) {
+        body = exBody;
+    } else if (!wtBody && exBody) {
+        body = exBody;
+    }
+
+    // 요약 모드: 서사 섹션(Biography/History 등)이 있으면 그 부분을, 없으면 도입부를.
+    if (!full && body) {
+        body = pickNarrativeForSummary(body);
+    }
+
+    let out = '';
+    if (fields) out += fields + '\n\n';
+    out += body || '';
+    out = out.trim();
+    // 둘 다 비면 기존 파서 결과라도 반환
+    return out || wtParsed;
+}
+
+// "필드줄들\n\n본문" 형태를 분리. 필드줄은 "key: value" 패턴(앞부분 연속).
+function splitFieldsAndBody(text) {
+    if (!text) return { fields: '', wtBody: '' };
+    const lines = text.split('\n');
+    const fieldLines = [];
+    let i = 0;
+    for (; i < lines.length; i++) {
+        const l = lines[i];
+        if (l.trim() === '') { if (fieldLines.length) { i++; break; } continue; }
+        // "label: value" 이고 값이 너무 길지 않은 줄을 필드로 간주
+        if (/^[A-Za-z][A-Za-z .'/-]{0,24}:\s+\S/.test(l) && l.length <= 120) {
+            fieldLines.push(l);
+        } else {
+            break;
+        }
+    }
+    const fields = fieldLines.join('\n').trim();
+    const wtBody = lines.slice(fieldLines.length ? i : 0).join('\n').trim();
+    // 필드를 못 찾았으면 전체가 본문
+    if (!fields) return { fields: '', wtBody: text.trim() };
+    return { fields, wtBody };
+}
+
+// 요약 본문 길이 제한: 문단 단위로 잘라 너무 길지 않게(대략 첫 2~3문단).
+function clampSummary(text) {
+    const paras = text.split(/\n{2,}/).map(p => p.trim()).filter(Boolean);
+    let out = '';
+    for (const p of paras) {
+        if (out && (out.length + p.length) > 700) break;
+        out += (out ? '\n\n' : '') + p;
+        if (out.length > 700) break;
+    }
+    return out || text.slice(0, 800);
+}
+
+// 요약용 본문 선택:
+//   캐릭터 문서는 맨 앞 도입부가 "출연작 소개"(예: '...is a main character in CoD: MW...')라
+//   서사 파악에 도움이 안 된다. 그래서 Biography/History/Personality 같은 '서사 섹션'이
+//   있으면 그 섹션부터 보여주고, 없으면 도입부를 사용한다.
+//   (extract 평문은 섹션 제목이 마크업 없이 한 줄로 옴)
+function pickNarrativeForSummary(text) {
+    if (!text) return '';
+    const lines = text.split('\n');
+    // 서사 섹션 제목(우선순위 순)
+    const narrativeHeads = [
+        'biography', 'history', 'background', 'character history',
+        'overview', 'personality', 'origin', 'description',
+        'early life', 'synopsis',
+    ];
+    // 섹션 제목 판별: 정확히 일치하거나, 'synopsis for ...'처럼 헤딩으로 시작
+    const isNarrativeHead = (lineLower) => {
+        if (!lineLower || lineLower.length >= 60) return false;
+        return narrativeHeads.some(h => lineLower === h || lineLower.startsWith(h + ' '));
+    };
+    // 섹션 제목 줄 인덱스 찾기
+    let startIdx = -1;
+    for (let i = 0; i < lines.length; i++) {
+        const l = lines[i].trim().toLowerCase();
+        if (isNarrativeHead(l)) {
+            startIdx = i + 1;
+            break;
+        }
+    }
+
+    // 도입부(첫 섹션 제목 전)를 따로 확보
+    const introLines = [];
+    for (let i = 0; i < lines.length; i++) {
+        const l = lines[i].trim();
+        if (l && /^[A-Z0-9]/.test(l) && !/[.!?,:;"'”’)\]]$/.test(l)
+            && isNarrativeHead(l.toLowerCase())) break;
+        introLines.push(lines[i]);
+    }
+    const intro = introLines.join('\n').trim();
+    // 도입부가 '출연작/등장 메타'(서사가 아님)인지 판별
+    const introIsMeta = /\b(is a (main |playable |supporting |minor )?character|is one of the (playable |main )?characters|appears (in|as)|is a character|playable character|is an? (issue|comic|storyline|story arc|limited series|one-shot) of|is an? \d{4}|published (in|by))\b/i.test(intro)
+        && intro.length < 600;
+
+    if (startIdx < 0) {
+        // 서사 섹션이 없으면 도입부 사용
+        return clampSummary(text);
+    }
+
+    // 서사 섹션 내용 추출 (다음 섹션 제목 전까지)
+    const rest = [];
+    for (let i = startIdx; i < lines.length; i++) {
+        const raw = lines[i];
+        const l = raw.trim();
+        if (l && l.length < 40 && !/[.!?,:;"'”’)\]]$/.test(l) && /^[A-Z0-9]/.test(l)) {
+            if (rest.join('\n').trim().length > 0) break;
+        }
+        rest.push(raw);
+    }
+    const sectionBody = rest.join('\n').trim();
+
+    // 도입부가 서사라면 "도입부 + 서사섹션"을, 메타라면 서사섹션만.
+    let combined;
+    if (introIsMeta || !intro) {
+        combined = sectionBody;
+    } else {
+        combined = intro + '\n\n' + sectionBody;
+    }
+    return clampSummary(combined || text);
 }
 
 // 위키 문서 원문 URL 만들기 (api.php -> /wiki/제목)
@@ -1349,5 +1767,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v2.4.5] loaded');
+    console.log('[Dalchive v2.5.8] loaded');
 });

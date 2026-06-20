@@ -38,6 +38,7 @@
     --mcu: #ff6b81; --mcu-bg: #ffe9ed;
     --cod: #7bc47f; --cod-bg: #e7f7e8;
     --re: #9d8bf0;  --re-bg: #efebfe;
+    --dc: #5aa9e6;  --dc-bg: #e4f1fc;
 }
 
 /* 팝업 창 — 바깥 컨테이너까지 흰색으로 덮어 원래 테마 색이 비치지 않게 함 */
@@ -613,6 +614,7 @@
 #cp-root .cp-worlds .cp-world--mcu { --accent: var(--mcu); --tint-bg: var(--mcu-bg); }
 #cp-root .cp-worlds .cp-world--cod { --accent: var(--cod); --tint-bg: var(--cod-bg); }
 #cp-root .cp-worlds .cp-world--re  { --accent: var(--re);  --tint-bg: var(--re-bg); }
+#cp-root .cp-worlds .cp-world--dc  { --accent: var(--dc);  --tint-bg: var(--dc-bg); }
 
 .cp-world-ico {
     width: 42px;
