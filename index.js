@@ -113,8 +113,17 @@ const WORLDS = {
                 'Battle of the Department of Mysteries', 'Battle of the Astronomy Tower',
                 'Skirmish at the Lovegood House', 'Attack on the Burrow',
                 'Battle of the Seven Potters', 'Quidditch World Cup', "Dumbledore's Army",
-                "Marauder's Map", 'Life debt', "Sirius Black's will",
+                'Life debt', "Sirius Black's will",
                 "Fred and George Weasley's departure from Hogwarts",
+            ],
+            '🪄 Items (마법 물건)': [
+                'Elder Wand', 'Resurrection Stone', 'Cloak of Invisibility', 'Deathly Hallows',
+                'Horcrux', 'Sword of Gryffindor', "Tom Riddle's Diary", "Salazar Slytherin's Locket",
+                'Mirror of Erised', 'Pensieve', "Marauder's Map", 'Sorting Hat', 'Time-Turner',
+                'Golden Snitch', 'Deluminator', 'Remembrall', 'Goblet of Fire',
+                'Firebolt', 'Nimbus 2000', 'Nimbus 2001', 'Cleansweep Eleven', 'Comet 260',
+                "Helga Hufflepuff's Cup", "Rowena Ravenclaw's Diadem",
+                'Vanishing Cabinet', 'Howler', 'Extendable Ears', 'Omnioculars',
             ],
             "🎬 Film Plots (영화별 플롯)": [
                 "Harry Potter and the Philosopher's Stone (film)",
@@ -230,7 +239,8 @@ const WORLDS = {
                 'Kyle "Gaz" Garrick', 'Alejandro Vargas', 'Rodolfo Parra',
                 'Kate Laswell', 'Farah Karim', 'Alex Keller', 'Phillip Graves',
                 'Keegan P. Russ', 'Kim "Horangi" Hong-jin', 'König', 'Nikto',
-                'Vladimir Makarov (Reboot)', 'Valeria Garza', 'Roach', 'Nikolai (Call of Duty)',
+                'Sebastian Krueger (Modern Warfare)',
+                'Vladimir Makarov (Reboot)', 'Valeria Garza', 'Roach', 'Nikolai (Reboot)',
             ],
             '🏴 Factions (세력)': [
                 'Task Force 141', 'Spetsnaz/Modern Warfare (Reboot)', 'Ultranationalists',
@@ -306,9 +316,10 @@ const WORLDS = {
                 'Ozwell E. Spencer', 'James Marcus',
             ],
             '🧟 Creatures & B.O.W. (크리처)': [
+                'Bio Organic Weapon',
                 'Tyrant', 'Nemesis-T Type', 'Zombie', 'Hunter', 'Cerberus',
                 'Licker', 'Crimson Head', 'Chimera', 'Ustanak', 'Regenerador',
-                'Plaga', 'Ganado',
+                'Plaga', 'Ganado', 'Las Plagas Undead',
             ],
             '🗺️ Locations (장소)': [
                 'Raccoon City', 'Spencer Mansion', 'Arklay Mountains',
@@ -316,12 +327,12 @@ const WORLDS = {
             ],
             '🧬 Viruses & Pathogens (바이러스·병원체)': [
                 't-Virus', 'G-Virus', 't-Veronica', 'Uroboros', 'C-Virus',
-                'Las Plagas', 'Cadou', 'Megamycete', 'NE-α Type',
+                'Las Plagas', 'Las Plagas (Anderson)', 'Cadou', 'Megamycete', 'NE-α Type',
             ],
             '🏢 Organizations (조직)': [
                 'Umbrella Corporation', 'S.T.A.R.S.', 'B.S.A.A.', 'Tricell',
                 'Division of Security Operations', 'Raccoon City Police Department',
-                'Neo Umbrella', 'Blue Umbrella', 'Los Iluminados',
+                'Neo Umbrella', 'Blue Umbrella', 'Los Iluminados', 'Hound Wolf Squad',
             ],
             '🎮 Game Plots (게임별 플롯)': [
                 'Resident Evil', 'Resident Evil 2', 'Resident Evil 3: Nemesis',
@@ -1435,7 +1446,7 @@ function pickNarrativeForSummary(text) {
     }
     const intro = introLines.join('\n').trim();
     // 도입부가 '출연작/등장 메타'(서사가 아님)인지 판별
-    const introIsMeta = /\b(is a (main |playable |supporting |minor )?character|is one of the (playable |main )?characters|appears (in|as)|is a character|playable character|is an? (issue|comic|storyline|story arc|limited series|one-shot) of|is an? \d{4}|published (in|by))\b/i.test(intro)
+    const introIsMeta = /\b(is a (main |playable |supporting |minor )?character|is one of the (playable |main )?characters|(is |was )?(a )?character (featured|appearing) in|featured in|appears (in|as)|is a character|playable character|is an? (issue|comic|storyline|story arc|limited series|one-shot) of|is an? \d{4}|published (in|by))\b/i.test(intro)
         && intro.length < 600;
 
     if (startIdx < 0) {
@@ -1767,5 +1778,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v2.5.8] loaded');
+    console.log('[Dalchive v2.5.9] loaded');
 });
