@@ -327,7 +327,7 @@ const WORLDS = {
             ],
             '🧬 Viruses & Pathogens (바이러스·병원체)': [
                 't-Virus', 'G-Virus', 't-Veronica', 'Uroboros', 'C-Virus',
-                'Las Plagas', 'Las Plagas (Anderson)', 'Cadou', 'Megamycete', 'NE-α Type',
+                'Las Plagas/biology', 'Las Plagas (Anderson)', 'Cadou', 'Megamycete', 'NE-α Type',
             ],
             '🏢 Organizations (조직)': [
                 'Umbrella Corporation', 'S.T.A.R.S.', 'B.S.A.A.', 'Tricell',
@@ -614,6 +614,10 @@ async function fetchWikitext(title, fullArticle, depth = 0) {
 
     // 제목 자체가 "/plot" 하위문서면 문서 전체가 줄거리 → 통째로 정리
     if (/\/plot$/i.test(title)) {
+        return raw ? '\u0001PLOTSUB\u0001' + raw : '';
+    }
+    // "/biology" 등 하위문서도 문서 전체가 본문(설명)이므로 통째로 정리
+    if (/\/(?:biology|history)$/i.test(title)) {
         return raw ? '\u0001PLOTSUB\u0001' + raw : '';
     }
 
@@ -1246,6 +1250,7 @@ let currentDetailFull = false; // 현재 상세가 전체 모드인지 (요약 �
 function displayTitle(title) {
     return title
         .replace(/\/plot$/i, '')
+        .replace(/\/(?:biology|gallery|history)$/i, '')
         .replace(/\s*\((?:\d{4}\s*)?(?:game|film|level|video game|\d{4}\s*game)\)\s*$/i, '')
         .replace(/\s*\(Modern Warfare[^)]*\)\s*$/i, '')
         .replace(/\s*\(Reboot\)\s*$/i, '')
@@ -1331,7 +1336,7 @@ async function buildDetailText(title, full) {
     } catch (e) { wtParsed = ''; }
 
     // plot 하위문서/줄거리 문서는 기존 파서 결과가 가장 정확하므로 그대로 사용
-    if (/\/plot$/i.test(title)) return wtParsed;
+    if (/\/(?:plot|biology|history)$/i.test(title)) return wtParsed;
 
     // DC Database 문서는 본문이 거대 틀의 Overview/HistoryText 필드 안에 있어
     // extract API로는 본문이 안 나온다. cleanDC가 모드별(요약/전체)로 이미
@@ -1361,7 +1366,26 @@ async function buildDetailText(title, full) {
 
     // 요약 모드: 서사 섹션(Biography/History 등)이 있으면 그 부분을, 없으면 도입부를.
     if (!full && body) {
-        body = pickNarrativeForSummary(body);
+        // 1순위: 위키텍스트에서 'Biography/History/Personality' 섹션을 직접 추출.
+        //   extract(평문)는 위키마다 섹션 헤딩 표현이 달라 서사 섹션을 못 찾는 경우가 있는데,
+        //   위키텍스트의 '== Biography ==' 헤딩은 일관적이라 더 안정적이다. (CoD 캐릭터 등)
+        let wtNarrative = '';
+        if (typeof rawWt === 'string' && rawWt) {
+            // biology(생물 문서)를 최우선으로, 없으면 biography/history 등 일반 서사 섹션.
+            // (Las Plagas 같은 크리처/병원체는 Biology가 핵심 설명이고 History는 줄거리라 덜 적합)
+            const sec = extractSection(rawWt, (h) => /^biology\b/.test(h))
+                || extractSection(rawWt, (h) =>
+                    /^(biography|history|character history|background|personality|origin|early life|overview|description)\b/.test(h));
+            if (sec) {
+                // 헤딩 줄 제거 후 마크업 정리
+                const secBody = sec.replace(/^={2,6}[^\n]*\n/, '');
+                const cleaned = stripMarkup(secBody).trim();
+                if (cleaned && cleaned.replace(/[\s:·]/g, '').length >= 30) {
+                    wtNarrative = clampSummary(cleaned);
+                }
+            }
+        }
+        body = wtNarrative || pickNarrativeForSummary(body);
     }
 
     let out = '';
@@ -1778,5 +1802,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v2.5.9] loaded');
+    console.log('[Dalchive v2.6.0] loaded');
 });
