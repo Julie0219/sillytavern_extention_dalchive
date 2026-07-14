@@ -471,9 +471,12 @@ function mergeRemoteData(remote) {
             }
         }
     }
-    // 2) overrides: 원격이 우선 (덮어쓰기)
+    // 2) overrides: 원격이 우선 (덮어쓰기). '_'로 시작하는 키는 주석이므로 제외.
     if (remote.overrides && typeof remote.overrides === 'object') {
-        Object.assign(OVERRIDES, remote.overrides);
+        for (const [k, v] of Object.entries(remote.overrides)) {
+            if (k.startsWith('_')) continue;
+            OVERRIDES[k] = v;
+        }
     }
 }
 
@@ -1311,15 +1314,17 @@ async function openDetail(title, forceFull) {
         return;
     }
 
-    // 2) 일반 위키 항목
+    // 2) 일반 위키 항목 (설명은 위키에서 가져옴)
     ta.value = '불러오는 중...';
     // 전체 모드면 "요약 보기", 요약 모드면 "전체 가져오기"로 토글
     if (fullBtn) {
         fullBtn.style.display = '';
         fullBtn.textContent = full ? '📑 요약 보기' : '📄 전체 가져오기';
     }
+    // override에 img만 지정된 경우: 설명은 위키에서 그대로 긁어오되 사진만 교체
+    const useCustomImg = !!(ov && ov.img);
     const [imgUrl, text] = await Promise.all([
-        fetchImage(title),
+        useCustomImg ? Promise.resolve(ov.img) : fetchImage(title),
         buildDetailText(title, full),
     ]);
     if (imgUrl) detail.querySelector('.cp-img').innerHTML = `<img src="${imgUrl}" alt="${title}" />`;
@@ -1812,5 +1817,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v2.6.1] loaded');
+    console.log('[Dalchive v2.6.2] loaded');
 });
