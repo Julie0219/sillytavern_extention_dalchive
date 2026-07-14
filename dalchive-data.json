@@ -2,6 +2,24 @@
   "overrides": {
     "Bellatrix Lestrange": {
       "img": "https://raw.githubusercontent.com/Julie0219/HP_images/main/Bellatrix.png"
+    },
+    "Sirius Black": {
+      "img": "https://raw.githubusercontent.com/Julie0219/HP_images/main/Sirius.png"
+    },
+    "Fred Weasley": {
+      "img": "https://raw.githubusercontent.com/Julie0219/HP_images/main/Fred.png"
+    },
+    "George Weasley": {
+      "img": "https://raw.githubusercontent.com/Julie0219/HP_images/main/George.png"
+    },
+    "Cedric Diggory": {
+      "img": "https://raw.githubusercontent.com/Julie0219/HP_images/main/Cedric.png"
+    },
+    "Remus Lupin": {
+      "img": "https://raw.githubusercontent.com/Julie0219/HP_images/main/Remus.png"
+    },
+    "Tom Riddle": {
+      "img": "https://raw.githubusercontent.com/Julie0219/HP_images/main/Tom.png"
     }
   }
 }
