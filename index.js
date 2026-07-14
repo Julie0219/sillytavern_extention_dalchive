@@ -634,12 +634,14 @@ async function fetchWikitext(title, fullArticle, depth = 0) {
     }
     if (!raw) return '';
 
-    // 1) Plot 섹션을 로컬에서 추출 (Plot 최우선 → Synopsis/Story → Summary)
+    // 1) Plot 섹션을 로컬에서 추출 (정확히 'Plot'/'Synopsis' 등인 헤딩만)
+    //    주의: n.includes('plot') 같은 느슨한 매칭은 캐릭터 문서의
+    //    "Plot against Albus Dumbledore" 같은 하위 헤딩을 잘못 잡아
+    //    인포박스를 통째로 날려버리므로 쓰지 않는다.
     let section = extractSection(raw, n => n === 'plot')
-        || extractSection(raw, n => n.includes('plot'))
         || extractSection(raw, n => n === 'synopsis' || n === 'story')
         || extractSection(raw, n => n === 'summary')
-        || extractSection(raw, n => n.includes('synopsis'));
+        || extractSection(raw, n => /^plot\b/.test(n) && !/\bagainst\b|\bto\b/.test(n));
     if (section && section.trim()) return '\n' + section;
 
     // 2) Plot류 섹션이 없음 → 문서 전체를 cleanGeneric에 넘김.
@@ -993,6 +995,10 @@ function parseInfoboxFields(ibText) {
         'jp name': null, family: 'family', age: 'age', height: 'height',
         first: 'first appearance', last: 'last appearance', aka: 'aka',
         'date of birth': 'born', hair: 'hair', eyes: 'eyes',
+        // 조직/단체 문서용
+        founder: 'founder', founders: 'founder', leader: 'leader', leaders: 'leader',
+        headquarters: 'headquarters', base: 'headquarters', members: 'members',
+        objective: 'objective', purpose: 'purpose', founded: 'founded', 'notable members': 'members',
     };
     // 틀 내부를 |로 분할 (단 [[..]], {{..}} 안의 |는 보호)
     const inner = ibText.replace(/^\{\{[^\n|]*/, '').replace(/\}\}\s*$/, '');
@@ -1380,7 +1386,11 @@ async function buildDetailText(title, full) {
                 // 헤딩 줄 제거 후 마크업 정리
                 const secBody = sec.replace(/^={2,6}[^\n]*\n/, '');
                 const cleaned = stripMarkup(secBody).trim();
-                if (cleaned && cleaned.replace(/[\s:·]/g, '').length >= 30) {
+                // 실질 내용(라벨/공백 제외)이 충분할 때만 채택.
+                // Marauders처럼 섹션 첫머리가 인용문/이미지뿐이면 라벨만 남는데,
+                // 그 경우 기존 body(extract 도입부+본문)가 훨씬 낫다.
+                const meat = cleaned.replace(/^[^\n]*:\s*$/gm, '').replace(/[\s:·]/g, '');
+                if (meat.length >= 200) {
                     wtNarrative = clampSummary(cleaned);
                 }
             }
@@ -1802,5 +1812,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v2.6.0] loaded');
+    console.log('[Dalchive v2.6.1] loaded');
 });

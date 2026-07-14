@@ -1,7 +1,7 @@
 {
     "display_name": "Dalchive",
     "name": "chatdal-pensieve",
-    "version": "2.6.0",
+    "version": "2.6.1",
     "author": "You",
     "description": "Multi-universe lore browser for SillyTavern. Pick a universe (Harry Potter, Marvel, Call of Duty...), then browse curated categories or search the Fandom wiki, with images. Opens from the wand menu.",
     "loading_order": 10,
