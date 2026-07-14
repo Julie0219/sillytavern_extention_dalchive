@@ -48,7 +48,7 @@ const WORLDS = {
         categories: {
             '🧙 Characters (인물)': [
                 'Harry Potter', 'Hermione Granger', 'Ron Weasley', 'Albus Dumbledore', 'Severus Snape',
-                'Lord Voldemort', 'Rubeus Hagrid', 'Draco Malfoy', 'Sirius Black', 'Remus Lupin',
+                'Tom Riddle', 'Rubeus Hagrid', 'Draco Malfoy', 'Sirius Black', 'Remus Lupin',
                 'Minerva McGonagall', 'Bellatrix Lestrange', 'Luna Lovegood', 'Neville Longbottom', 'Ginny Weasley',
                 'Dobby', 'Newt Scamander', 'Cedric Diggory', 'Cho Chang', 'Lucius Malfoy', 'Nymphadora Tonks',
                 'Alastor Moody', 'Dolores Umbridge', 'Horace Slughorn', 'Gellert Grindelwald', 'James Potter',
@@ -1817,5 +1817,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v2.6.3] loaded');
+    console.log('[Dalchive v2.6.4] loaded');
 });
