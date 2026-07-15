@@ -1817,5 +1817,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v2.6.4] loaded');
+    console.log('[Dalchive v2.6.5] loaded');
 });
