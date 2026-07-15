@@ -1375,27 +1375,22 @@ async function buildDetailText(title, full) {
         body = exBody;
     }
 
-    // 요약 모드: 서사 섹션(Biography/History 등)이 있으면 그 부분을, 없으면 도입부를.
+    // 요약 모드: 서사 섹션(Biography 등)을 골라 보여준다.
     if (!full && body) {
-        // 1순위: 위키텍스트에서 'Biography/History/Personality' 섹션을 직접 추출.
-        //   extract(평문)는 위키마다 섹션 헤딩 표현이 달라 서사 섹션을 못 찾는 경우가 있는데,
-        //   위키텍스트의 '== Biography ==' 헤딩은 일관적이라 더 안정적이다. (CoD 캐릭터 등)
+        // CoD 캐릭터는 extract 도입부가 '어느 게임에 출연' 같은 메타라 서사 파악에 부적합.
+        //   위키텍스트의 '== Biography ==' 섹션을 직접 뽑아 그 서사를 요약에 쓴다.
+        //   ※ CoD 세계관에만 한정한다. 예전에 이 로직을 전역 적용했더니 Marvel 요약
+        //     (cleanMarvel 결과)을 History 섹션 날것으로 덮어쓰는 부작용이 있었기 때문이다.
         let wtNarrative = '';
-        if (typeof rawWt === 'string' && rawWt) {
-            // biology(생물 문서)를 최우선으로, 없으면 biography/history 등 일반 서사 섹션.
-            // (Las Plagas 같은 크리처/병원체는 Biology가 핵심 설명이고 History는 줄거리라 덜 적합)
-            const sec = extractSection(rawWt, (h) => /^biology\b/.test(h))
-                || extractSection(rawWt, (h) =>
-                    /^(biography|history|character history|background|personality|origin|early life|overview|description)\b/.test(h));
+        if (currentWorld === 'cod' && typeof rawWt === 'string' && rawWt) {
+            const sec = extractSection(rawWt, (h) =>
+                /^(biography|history|character history|background|personality|early life)\b/.test(h));
             if (sec) {
-                // 헤딩 줄 제거 후 마크업 정리
                 const secBody = sec.replace(/^={2,6}[^\n]*\n/, '');
                 const cleaned = stripMarkup(secBody).trim();
-                // 실질 내용(라벨/공백 제외)이 충분할 때만 채택.
-                // Marauders처럼 섹션 첫머리가 인용문/이미지뿐이면 라벨만 남는데,
-                // 그 경우 기존 body(extract 도입부+본문)가 훨씬 낫다.
+                // 실질 내용(라벨/공백 제외)이 충분할 때만 채택. 부실하면 아래 폴백.
                 const meat = cleaned.replace(/^[^\n]*:\s*$/gm, '').replace(/[\s:·]/g, '');
-                if (meat.length >= 200) {
+                if (meat.length >= 120) {
                     wtNarrative = clampSummary(cleaned);
                 }
             }
@@ -1817,5 +1812,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v2.6.5] loaded');
+    console.log('[Dalchive v2.6.7] loaded');
 });
