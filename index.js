@@ -51,8 +51,8 @@ const WORLDS = {
                 'Tom Riddle', 'Rubeus Hagrid', 'Draco Malfoy', 'Sirius Black', 'Remus Lupin',
                 'Minerva McGonagall', 'Bellatrix Lestrange', 'Luna Lovegood', 'Neville Longbottom', 'Ginny Weasley',
                 'Dobby', 'Newt Scamander', 'Cedric Diggory', 'Cho Chang', 'Lucius Malfoy', 'Nymphadora Tonks',
-                'Alastor Moody', 'Dolores Umbridge', 'Horace Slughorn', 'Gellert Grindelwald', 'James Potter',
-                'Lily Potter', 'Bill Weasley', 'Molly Weasley', 'Arthur Weasley', 'Fred Weasley', 'George Weasley',
+                'Alastor Moody', 'Dolores Umbridge', 'Horace Slughorn', 'Gellert Grindelwald', 'James Potter (I)',
+                'Lily Potter (I)', 'Bill Weasley', 'Molly Weasley', 'Arthur Weasley', 'Fred Weasley', 'George Weasley',
                 'Percy Weasley', 'Charlie Weasley', 'Fleur Delacour', 'Viktor Krum', 'Cornelius Fudge',
                 'Kingsley Shacklebolt', 'Peter Pettigrew', 'Filius Flitwick', 'Pomona Sprout', 'Sybill Trelawney',
                 'Argus Filch', 'Gilderoy Lockhart', 'Quirinus Quirrell', 'Bartemius Crouch Junior', 'Regulus Black',
@@ -81,7 +81,7 @@ const WORLDS = {
                 'Antidote to Common Poisons', 'Cure for Boils', 'Hiccoughing Solution', 'Murtlap Essence',
             ],
             '🐉 Creatures (마법동물)': [
-                'Niffler', 'Hippogriff', 'Basilisk', 'Thestral', 'Dementor', 'Dragon', 'Phoenix', 'House-elf',
+                'Niffler', 'Pygmy Puff', 'Puffskein', 'Hippogriff', 'Basilisk', 'Thestral', 'Dementor', 'Dragon', 'Phoenix', 'House-elf',
                 'Acromantula', 'Boggart', 'Werewolf', 'Centaur', 'Goblin', 'Troll', 'Veela', 'Unicorn', 'Bowtruckle',
                 'Kneazle', 'Occamy', 'Demiguise', 'Mooncalf', 'Thunderbird', 'Erumpent', 'Grindylow', 'Cornish pixie',
                 'Blast-Ended Skrewt', 'Flobberworm', 'Hungarian Horntail', 'Merpeople', 'Giant', 'Inferius', 'Pixie',
@@ -1269,6 +1269,8 @@ function displayTitle(title) {
         .replace(/\s*\(Event\)\s*$/i, '')
         .replace(/\s*\(level\)\s*$/i, '')
         .replace(/\s*\((?:Prime Earth|New Earth|Rebirth|Volume \d+)\)\s*$/i, '')
+        // 동명이인 구분용 로마숫자 표기: "James Potter (I)" → "James Potter" (HP 위키 방식)
+        .replace(/\s*\((?:I{1,3}|IV|V)\)\s*$/, '')
         // 코믹 이슈: "... Vol 1 5" → "... #5" (표시용. API 호출엔 원제목 사용)
         .replace(/\s+Vol\s+\d+\s+(\d+)\s*$/i, ' #$1')
         .trim();
@@ -1812,5 +1814,5 @@ jQuery(() => {
         if (addWandButton() || ++tries > 20) clearInterval(timer);
     }, 500);
     loadRemoteData();   // 깃허브 원격 데이터 병합 (설정돼 있으면)
-    console.log('[Dalchive v2.6.7] loaded');
+    console.log('[Dalchive v2.6.8] loaded');
 });
